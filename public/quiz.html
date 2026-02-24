@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 40px; }
+    button { padding: 8px 15px; margin: 5px; }
+    .option { display: block; margin: 10px auto; width: 200px; }
+  </style>
+</head>
+<body>
+
+<h2>Quiz</h2>
+
+<input id="teamName" placeholder="Enter Team Name"><br><br>
+
+<div id="questionBox"></div>
+
+<script>
+let currentQuestion = null;
+
+async function loadQuestion() {
+  const res = await fetch("/api/questions");
+  const questions = await res.json();
+
+  if (questions.length === 0) {
+    document.getElementById("questionBox").innerText = "No questions available.";
+    return;
+  }
+
+  currentQuestion = questions[0]; // حالياً أول سؤال فقط
+
+  let html = `<h3>${currentQuestion.question}</h3>`;
+
+  currentQuestion.options.forEach(opt => {
+    html += `<button class="option" onclick="answerQuestion('${opt}')">${opt}</button>`;
+  });
+
+  document.getElementById("questionBox").innerHTML = html;
+}
+
+async function answerQuestion(answer) {
+  const teamName = document.getElementById("teamName").value;
+
+  if (!teamName) {
+    alert("Enter team name first");
+    return;
+  }
+
+  const res = await fetch("/api/answer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      teamName: teamName,
+      questionId: currentQuestion._id,
+      answer: answer
+    })
+  });
+
+  const data = await res.json();
+
+  if (data.correct) {
+    alert("Correct! New Score: " + data.newScore);
+  } else {
+    alert("Wrong answer!");
+  }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
