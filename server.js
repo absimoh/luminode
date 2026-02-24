@@ -97,7 +97,12 @@ app.post("/api/team/create", async (req, res) => {
 
     res.status(201).json({
       message: "Team created successfully",
-      team: newTeam
+      team: {
+        id: newTeam._id,
+        name: newTeam.name,
+        members: newTeam.members,
+        score: newTeam.score
+      }
     });
 
   } catch (error) {
@@ -135,7 +140,12 @@ app.post("/api/team/join", async (req, res) => {
 
     res.json({
       message: "Joined successfully",
-      team
+      team: {
+        id: team._id,
+        name: team.name,
+        members: team.members,
+        score: team.score
+      }
     });
 
   } catch (error) {
