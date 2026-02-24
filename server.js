@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -22,7 +23,7 @@ app.get("/", (req, res) => {
   res.send("🔥 Luminode is Live");
 });
 
-/* ================= CHECK ROUTE ================= */
+/* ================= CHECK ================= */
 
 app.get("/api/check", (req, res) => {
   res.json({ status: "API working ✅" });
@@ -48,19 +49,17 @@ app.post("/api/team/create", async (req, res) => {
     const newTeam = new Team({
       name,
       password: hashedPassword,
-      members: [memberName],
-      points: 0
+      members: [
+        { name: memberName }
+      ],
+      score: 0
     });
 
     await newTeam.save();
 
     res.status(201).json({
       message: "Team created successfully",
-      team: {
-        name: newTeam.name,
-        members: newTeam.members,
-        points: newTeam.points
-      }
+      team: newTeam
     });
 
   } catch (error) {
@@ -74,6 +73,10 @@ app.post("/api/team/create", async (req, res) => {
 app.post("/api/team/join", async (req, res) => {
   try {
     const { name, password, memberName } = req.body;
+
+    if (!name || !password || !memberName) {
+      return res.status(400).json({ message: "All fields required" });
+    }
 
     const team = await Team.findOne({ name });
     if (!team) {
@@ -89,7 +92,7 @@ app.post("/api/team/join", async (req, res) => {
       return res.status(400).json({ message: "Team is full" });
     }
 
-    team.members.push(memberName);
+    team.members.push({ name: memberName });
     await team.save();
 
     res.json({
@@ -98,6 +101,7 @@ app.post("/api/team/join", async (req, res) => {
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -105,8 +109,12 @@ app.post("/api/team/join", async (req, res) => {
 /* ================= LEADERBOARD ================= */
 
 app.get("/api/leaderboard", async (req, res) => {
-  const teams = await Team.find().sort({ points: -1 });
-  res.json(teams);
+  try {
+    const teams = await Team.find().sort({ score: -1 });
+    res.json(teams);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 /* ================= SERVER ================= */
