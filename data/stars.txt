@@ -1,0 +1,580 @@
+Question 1
+What is a star?
+A) A planet that glows
+B) A massive ball of hot gas producing energy ✓
+C) A rock in space
+D) A satellite
+Question 2
+What is our nearest star?
+A) Alpha Centauri
+B) The Sun ✓
+C) Sirius
+D) Proxima Centauri
+Question 3
+What color are the hottest stars?
+A) Red
+B) Yellow
+C) Blue ✓
+D) White
+Question 4
+What is a constellation?
+A) A type of star
+B) A pattern of stars in the sky ✓
+C) A galaxy
+D) A planet group
+Question 5
+What is the brightest star in the night sky? A) A new star
+B) An exploding star ✓
+C) A bright star
+D) A super planet
+Question 7
+What is a nebula?
+A) A planet
+B) A cloud of gas and dust in space ✓
+C) A type of star
+D) A galaxy
+Question 8
+What is a red giant?
+A) A big planet
+B) A large, cool, aging star ✓
+C) A red star
+D) A giant nebula
+Question 9
+What is a white dwarf?
+A) A small planet
+B) The remnant core of a dead star ✓
+C) A white star
+D) A dwarf planet
+Question 10
+What is a neutron star?
+A) A star with neutrons
+B) An extremely dense stellar remnant ✓
+C) A neutral star
+D) A new star
+Question 11
+What is a black hole?
+A) A dark star
+B) A region where gravity is so strong nothing escapes ✓
+C) An empty space
+D) A hole in space
+Question 12
+What is nuclear fusion?
+A) Nuclear explosion
+B) Process combining atoms to release energy ✓
+C) Atom splitting D) Nuclear reaction
+Question 13
+What element do stars primarily fuse?
+A) Carbon
+B) Hydrogen ✓
+C) Oxygen
+D) Iron
+Question 14
+What is stellar magnitude?
+A) Star size
+B) Measure of star brightness ✓
+C) Star mass
+D) Star distance
+Question 15
+What is a binary star system?
+A) Two planets
+B) Two stars orbiting each other ✓
+C) A double star
+D) Twin stars
+Question 16
+What is the North Star called?
+A) Sirius
+B) Polaris ✓
+C) Vega
+D) Betelgeuse
+Question 17
+What is a pulsar?
+A) Pulsing light
+B) Rotating neutron star emitting radiation ✓
+C) Beating star
+D) Flashing star
+Question 18
+What is stellar parallax?
+A) Star movement
+B) Apparent shift in star position ✓
+C) Star distance
+D) Parallel stars
+Question 19 What is a light-year?
+A) One year of light
+B) Distance light travels in one year ✓
+C) Time measurement
+D) Light duration
+Question 20
+What is the main sequence?
+A) Star order
+B) Stage where stars fuse hydrogen ✓
+C) Primary stars
+D) Star line
+Question 21
+What is a protostar?
+A) First star
+B) Early stage of star formation ✓
+C) Professional star
+D) Primary star
+Question 22
+What is stellar wind?
+A) Space breeze
+B) Stream of particles from a star ✓
+C) Star movement
+D) Cosmic wind
+Question 23
+What is a supergiant star?
+A) Very large planet
+B) Extremely large and luminous star ✓
+C) Giant star
+D) Super bright star
+Question 24
+What is Betelgeuse?
+A) A planet
+B) A red supergiant star in Orion ✓
+C) A galaxy
+D) A constellation
+Question 25
+What is the Sun's classification?
+A) Red giant
+B) Yellow dwarf (G-type main sequence) ✓ C) White dwarf
+D) Blue giant
+Question 26
+What is a planetary nebula?
+A) Planet cloud
+B) Glowing shell ejected by dying star ✓
+C) Nebula with planets
+D) Planet formation
+Question 27
+What is the Hertzsprung-Russell diagram?
+A) Star map
+B) Graph plotting star luminosity vs temperature ✓
+C) Constellation chart
+D) Galaxy diagram
+Question 28
+What is stellar luminosity?
+A) Star brightness
+B) Total energy output of a star ✓
+C) Light amount
+D) Glow intensity
+Question 29
+What is absolute magnitude?
+A) True size
+B) Brightness at standard distance ✓
+C) Actual brightness
+D) Complete magnitude
+Question 30
+What is apparent magnitude?
+A) Visible size
+B) Brightness as seen from Earth ✓
+C) Seeming brightness
+D) Observable magnitude
+Question 31
+What is a variable star?
+A) Changing star
+B) Star with varying brightness ✓
+C) Different star
+D) Moving star
+Question 32 What is a Cepheid variable?
+A) Special variable
+B) Pulsating star used for distance measurement ✓
+C) Named variable
+D) Periodic star
+Question 33
+What is stellar spectroscopy?
+A) Star colors
+B) Analyzing star light to determine composition ✓
+C) Light study
+D) Spectrum analysis
+Question 34
+What is the Chandrasekhar limit?
+A) Star size limit
+B) Maximum mass for white dwarf (1.4 solar masses) ✓
+C) Brightness limit
+D) Distance limit
+Question 35
+What is a brown dwarf?
+A) Small star
+B) Failed star too small for fusion ✓
+C) Brown star
+D) Dwarf star
+Question 36
+What is stellar metallicity?
+A) Metal content
+B) Abundance of elements heavier than helium ✓
+C) Iron amount
+D) Metal percentage
+Question 37
+What are Population I stars?
+A) First stars
+B) Young, metal-rich stars ✓
+C) Primary stars
+D) Main stars
+Question 38
+What are Population II stars?
+A) Second stars
+B) Old, metal-poor stars ✓ C) Secondary stars
+D) Ancient stars
+Question 39
+What is a star cluster?
+A) Star group
+B) Group of stars formed together ✓
+C) Clustered stars
+D) Star collection
+Question 40
+What is the Pleiades?
+A) A constellation
+B) An open star cluster ✓
+C) A galaxy
+D) A nebula 
+Question 41
+What is the CNO cycle?
+A) Carbon process
+B) Carbon-Nitrogen-Oxygen fusion cycle ✓
+C) Circular reaction
+D) Chemical cycle
+Question 42
+What is the proton-proton chain?
+A) Particle connection
+B) Primary fusion process in Sun-like stars ✓
+C) Proton sequence
+D) Nuclear chain
+Question 43
+What is the triple-alpha process?
+A) Three alphas
+B) Fusion of helium into carbon ✓
+C) Triple fusion
+D) Alpha reaction
+Question 44
+What is stellar nucleosynthesis?
+A) Star birth
+B) Creation of elements in stars ✓
+C) Nuclear formation
+D) Element production
+Question 45
+What is the s-process?
+A) Slow process
+B) Slow neutron capture creating heavy elements ✓
+C) Star process
+D) Sequential reaction
+Question 46
+What is the r-process?
+A) Rapid process
+B) Rapid neutron capture in supernovae ✓
+C) Reaction process
+D) Quick formation
+Question 47 What is the Eddington luminosity?
+A) Maximum brightness
+B) Luminosity where radiation pressure balances gravity ✓
+C) Limit brightness
+D) Peak luminosity
+Question 48
+What is the Hayashi track?
+A) Star path
+B) Pre-main sequence evolutionary path ✓
+C) Formation track
+D) Development line
+Question 49
+What is the Henyey track?
+A) Star route
+B) Later pre-main sequence evolution ✓
+C) Evolution path
+D) Development track
+Question 50
+What is the asymptotic giant branch (AGB)?
+A) Branch type
+B) Late stage of stellar evolution ✓
+C) Giant phase
+D) Evolution branch
+Question 51
+What is the horizontal branch?
+A) Flat line
+B) Helium-burning phase in HR diagram ✓
+C) Level stage
+D) Horizontal phase
+Question 52
+What is the red giant branch (RGB)?
+A) Red phase
+B) First giant phase in stellar evolution ✓
+C) Giant stage
+D) Red evolution
+Question 53
+What is the instability strip?
+A) Unstable region
+B) HR diagram region where stars pulsate ✓ C) Variable zone
+D) Pulsation area
+Question 54
+What is the mass-luminosity relation?
+A) Weight-brightness
+B) More massive stars are more luminous ✓
+C) Mass-light link
+D) Size-brightness
+Question 55
+What is convection in stars?
+A) Heat movement
+B) Energy transport by bulk motion ✓
+C) Circulation
+D) Material flow
+Question 56
+What is radiative transfer?
+A) Light movement
+B) Energy transport by photons ✓
+C) Radiation flow
+D) Energy transfer
+Question 57
+What is the Schwarzschild criterion?
+A) Black hole rule
+B) Condition for convective instability ✓
+C) Stability test
+D) Convection criterion
+Question 58
+What is the Ledoux criterion?
+A) Stability rule
+B) Convection criterion including composition ✓
+C) Chemical test
+D) Composition criterion
+Question 59
+What is stellar opacity?
+A) Transparency
+B) Resistance to radiation flow ✓
+C) Blockage
+D) Light resistance
+Question 60 What is the Kramers opacity law?
+A) Light rule
+B) Opacity proportional to density and temperature ✓
+C) Resistance law
+D) Transparency formula
+Question 61
+What is electron degeneracy pressure?
+A) Particle pressure
+B) Quantum pressure supporting white dwarfs ✓
+C) Electron force
+D) Quantum pressure
+Question 62
+What is neutron degeneracy pressure?
+A) Neutron force
+B) Quantum pressure supporting neutron stars ✓
+C) Particle pressure
+D) Nuclear pressure
+Question 63
+What is the Tolman-Oppenheimer-Volkoff limit?
+A) Star limit
+B) Maximum mass for neutron star ✓
+C) Mass ceiling
+D) Neutron limit
+Question 64
+What is a Type Ia supernova?
+A) First type
+B) White dwarf exceeding Chandrasekhar limit ✓
+C) Category A
+D) Primary explosion
+Question 65
+What is a Type II supernova?
+A) Second type
+B) Core collapse of massive star ✓
+C) Category B
+D) Secondary explosion
+Question 66
+What is a hypernova?
+A) Super explosion
+B) Extremely energetic supernova ✓ C) Hyper explosion
+D) Mega supernova
+Question 67
+What is a gamma-ray burst?
+A) Radiation burst
+B) Intense gamma-ray emission from cosmic events ✓
+C) Energy flash
+D) Ray explosion
+Question 68
+What is stellar rotation?
+A) Star spinning
+B) Angular momentum of stars ✓
+C) Rotation speed
+D) Spin rate
+Question 69
+What is differential rotation in stars?
+A) Different speeds
+B) Equator rotates faster than poles ✓
+C) Variable rotation
+D) Unequal spinning
+Question 70
+What is stellar magnetic field?
+A) Star magnetism
+B) Magnetic field generated by stellar dynamo ✓
+C) Magnetic force
+D) Field strength
+Question 71
+What is a stellar flare?
+A) Bright flash
+B) Sudden energy release from star surface ✓
+C) Star burst
+D) Energy spike
+Question 72
+What is stellar mass loss?
+A) Weight reduction
+B) Material ejected from star ✓
+C) Mass decrease
+D) Material loss
+Question 73 What is the solar cycle?
+A) Sun's orbit
+B) 11-year cycle of solar activity ✓
+C) Yearly pattern
+D) Sun period
+Question 74
+What are sunspots?
+A) Dark spots
+B) Cool regions on Sun's surface ✓
+C) Sun marks
+D) Surface spots
+Question 75
+What is the solar corona?
+A) Sun's crown
+B) Outer atmosphere of the Sun ✓
+C) Sun's halo
+D) Outer layer 
+Question 76
+What is the Lane-Emden equation?
+A) Star equation
+B) Describes stellar structure for polytropes ✓
+C) Pressure formula
+D) Density equation
+Question 77
+What is the Vogt-Russell theorem?
+A) Star law
+B) Star structure determined by mass and composition ✓
+C) Evolution rule
+D) Formation theorem
+Question 78
+What is the Schönberg-Chandrasekhar limit?
+A) Core limit
+B) Maximum isothermal core mass ✓
+C) Mass boundary
+D) Core maximum
+Question 79
+What is the Jeans instability criterion?
+A) Collapse rule
+B) Condition for gravitational collapse ✓
+C) Instability test
+D) Formation criterion
+Question 80
+What is the virial theorem in stellar structure?
+A) Energy balance
+B) 2K + U = 0 for equilibrium ✓
+C) Force equilibrium
+D) Pressure balance
+Question 81
+What is the polytropic index?
+A) Power value
+B) Exponent in polytropic equation of state ✓
+C) Index number
+D) Pressure exponent
+Question 82 What is the Rosseland mean opacity?
+A) Average opacity
+B) Weighted mean opacity for radiative transfer ✓
+C) Mean resistance
+D) Opacity average
+Question 83
+What is the mixing length theory?
+A) Stirring theory
+B) Model for convective energy transport ✓
+C) Mixing model
+D) Convection theory
+Question 84
+What is overshooting in stellar convection?
+A) Excess mixing
+B) Convective elements penetrating stable layers ✓
+C) Over-mixing
+D) Extended convection
+Question 85
+What is the Kelvin-Helmholtz timescale?
+A) Cooling time
+B) Gravitational contraction timescale ✓
+C) Collapse time
+D) Contraction period
+Question 86
+What is the nuclear timescale?
+A) Fusion time
+B) Time to exhaust nuclear fuel ✓
+C) Burning duration
+D) Fuel lifetime
+Question 87
+What is the dynamical timescale?
+A) Movement time
+B) Free-fall collapse time ✓
+C) Dynamic period
+D) Motion time
+Question 88
+What is the Salpeter initial mass function?
+A) Mass distribution
+B) Power-law IMF with slope -2.35 ✓ C) Formation function
+D) Mass formula
+Question 89
+What is the Chabrier IMF?
+A) Modern IMF
+B) Log-normal IMF for low masses ✓
+C) Mass function
+D) Distribution model
+Question 90
+What is the ZAMS (Zero Age Main Sequence)?
+A) Star start
+B) Beginning of hydrogen burning phase ✓
+C) Initial sequence
+D) Formation point
+Question 91
+What is the TAMS (Terminal Age Main Sequence)?
+A) Star end
+B) End of hydrogen burning in core ✓
+C) Final sequence
+D) Termination point
+Question 92
+What is the helium flash?
+A) Helium burst
+B) Explosive helium ignition in degenerate core ✓
+C) Flash event
+D) Sudden burning
+Question 93
+What is the carbon flash?
+A) Carbon burst
+B) Explosive carbon ignition in degenerate core ✓
+C) Carbon ignition
+D) Flash burning
+Question 94
+What is the Urca process?
+A) Cooling mechanism
+B) Neutrino emission cooling neutron stars ✓
+C) Energy loss
+D) Neutrino process
+Question 95 What is the Pauli exclusion principle's role in degeneracy?
+A) Particle rule
+B) Prevents fermions from occupying same state ✓
+C) Quantum law
+D) Exclusion effect
+Question 96
+What is the equation of state for degenerate matter?
+A) Pressure law
+B) P ∝ ρ^(5/3) for non-relativistic ✓
+C) Density formula
+D) State equation
+Question 97
+What is the Oppenheimer-Volkoff equation?
+A) Neutron equation
+B) Hydrostatic equilibrium for neutron stars ✓
+C) Pressure balance
+D) Structure formula
+Question 98
+What is the Eddington standard model?
+A) Classic model
+B) Early stellar structure model ✓
+C) Standard theory
+D) Basic model
+Question 99
+What is the Cowling approximation?
+A) Simplified model
+B) Neglecting perturbations in gravitational potential ✓
+C) Approximation method
+D) Simplified calculation
+Question 100
+What is the Brunt-Väisälä frequency?
+A) Oscillation rate
+B) Buoyancy oscillation frequency ✓
+C) Wave frequency
+D) Vibration rate

@@ -1,0 +1,583 @@
+Question 1
+What is the Big Bang Theory?
+A) A TV show
+B) The theory explaining the universe's origin ✓
+C) An explosion in space
+D) A star formation theory
+Question 2
+Approximately how old is the universe?
+A) 4.5 billion years
+B) 13.8 billion years ✓
+C) 20 billion years
+D) 1 billion years
+Question 3
+What is cosmic microwave background radiation?
+A) Radio signals from stars
+B) Remnant radiation from the Big Bang ✓
+C) Microwave ovens in space
+D) Solar radiation
+Question 4
+What is the universe primarily made of?
+A) Stars and planets
+B) Dark matter and dark energy ✓
+C) Gas and dust
+D) Asteroids and comets
+Question 5
+What is cosmic inflation?
+A) Universe getting bigger
+B) Rapid expansion in the early universe ✓ What is redshift?
+A) Red stars
+B) Light stretched as objects move away ✓
+C) Sunset colors
+D) Mars appearance
+Question 7
+What is the observable universe?
+A) What we can see with telescopes
+B) The part of the universe we can detect ✓
+C) The entire universe
+D) Our galaxy
+Question 8
+What are the first elements formed after the Big Bang?
+A) Iron and carbon
+B) Hydrogen and helium ✓
+C) Oxygen and nitrogen
+D) Gold and silver
+Question 9
+What is dark matter?
+A) Black holes
+B) Invisible matter detected by gravitational effects ✓
+C) Dark clouds
+D) Burnt stars
+Question 10
+What is dark energy?
+A) Black hole energy
+B) Mysterious force accelerating universe expansion ✓
+C) Energy from dark matter
+D) Nighttime energy
+Question 11
+What is the cosmological constant?
+A) Speed of light
+B) Value representing dark energy density ✓
+C) Universe age
+D) Gravitational constant
+Question 12
+What is nucleosynthesis?
+A) Nuclear power
+B) Formation of atomic nuclei ✓ C) Cell division
+D) Star birth
+Question 13
+What is the universe's shape according to current observations?
+A) Spherical
+B) Flat ✓
+C) Cubic
+D) Cylindrical
+Question 14
+What is the Hubble constant?
+A) Telescope size
+B) Rate of universe expansion ✓
+C) Star brightness
+D) Galaxy count
+Question 15
+What is antimatter?
+A) Empty space
+B) Matter with opposite charge properties ✓
+C) Dark matter
+D) Negative energy
+Question 16
+What happened during the Planck epoch?
+A) First stars formed
+B) Earliest known period of the universe ✓
+C) Planets formed
+D) Galaxies merged
+Question 17
+What is the cosmic web?
+A) Internet in space
+B) Large-scale structure of the universe ✓
+C) Spider webs in space
+D) Satellite network
+Question 18
+What are cosmic voids?
+A) Black holes
+B) Large empty regions in space ✓
+C) Vacuum chambers
+D) Deleted galaxies
+Question 19 What is baryonic matter?
+A) Heavy matter
+B) Ordinary matter made of protons and neutrons ✓
+C) Dark matter
+D) Energy matter
+Question 20
+What is the recombination era?
+A) Atoms splitting
+B) When electrons combined with nuclei ✓
+C) Galaxy mergers
+D) Star formation
+Question 21
+What is the photon epoch?
+A) Photography era
+B) Period when photons dominated the universe ✓
+C) Light speed era
+D) Solar formation
+Question 22
+What is the matter-dominated era?
+A) Current time
+B) Period when matter density exceeded radiation ✓
+C) Star formation period
+D) Galaxy era
+Question 23
+What is homogeneity in cosmology?
+A) Same temperature
+B) Universe looks the same everywhere ✓
+C) Uniform color
+D) Equal gravity
+Question 24
+What is isotropy in cosmology?
+A) Same elements
+B) Universe looks the same in all directions ✓
+C) Equal density
+D) Uniform expansion
+Question 25
+What is the cosmological principle?
+A) Universe law
+B) Universe is homogeneous and isotropic ✓ C) Gravity rule
+D) Energy conservation
+Question 26
+What are primordial fluctuations?
+A) Early earthquakes
+B) Tiny density variations in early universe ✓
+C) Temperature changes
+D) Light variations
+Question 27
+What is the horizon problem?
+A) Can't see far enough
+B) Why distant regions have same temperature ✓
+C) Edge of universe
+D) Telescope limitation
+Question 28
+What is the flatness problem?
+A) Universe shape issue
+B) Why universe is so close to flat ✓
+C) Gravity problem
+D) Space curvature
+Question 29
+What is the monopole problem?
+A) Magnetic issue
+B) Why magnetic monopoles aren't observed ✓
+C) Single pole stars
+D) Gravity anomaly
+Question 30
+What is the multiverse theory?
+A) Multiple galaxies
+B) Hypothesis of multiple universes ✓
+C) Parallel dimensions
+D) Many worlds
+Question 31
+What is the critical density?
+A) Maximum density
+B) Density needed for flat universe ✓
+C) Minimum density
+D) Average density
+Question 32 What is the scale factor in cosmology?
+A) Universe size
+B) Measure of universe expansion ✓
+C) Distance scale
+D) Time measurement
+Question 33
+What are acoustic oscillations?
+A) Sound in space
+B) Density waves in early universe ✓
+C) Star vibrations
+D) Galaxy movements
+Question 34
+What is the particle horizon?
+A) Edge of matter
+B) Maximum distance light could have traveled ✓
+C) Particle limit
+D) Quantum boundary
+Question 35
+What is the event horizon in cosmology?
+A) Black hole edge
+B) Boundary of observable events ✓
+C) Time limit
+D) Space border
+Question 36
+What is the deceleration parameter?
+A) Slowing speed
+B) Measure of expansion rate change ✓
+C) Brake force
+D) Gravity strength
+Question 37
+What is the equation of state in cosmology?
+A) Government law
+B) Relationship between pressure and density ✓
+C) Energy formula
+D) Temperature equation
+Question 38
+What is the Friedmann equation?
+A) Gravity formula
+B) Equation describing universe expansion ✓ C) Energy equation
+D) Time formula
+Question 39
+What is the Jeans length?
+A) Pants measurement
+B) Critical size for gravitational collapse ✓
+C) Distance unit
+D) Wave length
+Question 40
+What is the Silk damping?
+A) Fabric physics
+B) Suppression of small-scale fluctuations ✓
+C) Energy loss
+D) Wave reduction 
+Question 41
+What is the significance of the CMB temperature of 2.7 Kelvin?
+A) Random value
+B) Cooled remnant of hot early universe ✓
+C) Average space temperature
+D) Minimum possible temperature
+Question 42
+What is the baryon asymmetry problem?
+A) Unequal distribution
+B) Why more matter than antimatter exists ✓
+C) Proton imbalance
+D) Neutron excess
+Question 43
+What is the role of quantum fluctuations in the early universe?
+A) Random noise
+B) Seeds for structure formation ✓
+C) Energy variations
+D) Particle creation
+Question 44
+What is the electroweak epoch?
+A) Electricity formation
+B) When electromagnetic and weak forces separated ✓
+C) Electron creation
+D) Weak interaction period
+Question 45
+What is the quark epoch?
+A) Particle discovery
+B) Period when quarks were free ✓
+C) Strong force era
+D) Hadron formation
+Question 46
+What is the hadron epoch?
+A) Particle collision
+B) When quarks combined into hadrons ✓
+C) Proton formation
+D) Nuclear era
+Question 47 What is the lepton epoch?
+A) Electron era
+B) Period dominated by leptons ✓
+C) Light particle time
+D) Neutrino formation
+Question 48
+What is Big Bang nucleosynthesis?
+A) Star formation
+B) Formation of light elements in early universe ✓
+C) Nuclear reactions
+D) Atom creation
+Question 49
+What is the cosmic neutrino background?
+A) Neutrino stars
+B) Relic neutrinos from Big Bang ✓
+C) Particle radiation
+D) Weak force remnant
+Question 50
+What is the Sakharov conditions?
+A) Universe laws
+B) Conditions for baryon asymmetry ✓
+C) Particle rules
+D) Energy requirements
+Question 51
+What is the GUT epoch?
+A) Digestive period
+B) Grand Unified Theory era ✓
+C) Gravity formation
+D) Universal time
+Question 52
+What is spontaneous symmetry breaking?
+A) Random breaking
+B) Process where symmetric state becomes asymmetric ✓
+C) Force separation
+D) Energy release
+Question 53
+What is the inflaton field?
+A) Expansion force
+B) Hypothetical field driving inflation ✓ C) Energy field
+D) Gravity field
+Question 54
+What is the slow-roll condition in inflation?
+A) Gradual expansion
+B) Inflaton field evolving slowly ✓
+C) Deceleration phase
+D) Smooth growth
+Question 55
+What is reheating after inflation?
+A) Temperature rise
+B) Conversion of inflaton energy to particles ✓
+C) Universe warming
+D) Energy redistribution
+Question 56
+What is the tensor-to-scalar ratio?
+A) Size comparison
+B) Ratio of gravitational waves to density fluctuations ✓
+C) Force ratio
+D) Energy proportion
+Question 57
+What are primordial gravitational waves?
+A) Early vibrations
+B) Gravitational waves from inflation ✓
+C) Wave formation
+D) Gravity ripples
+Question 58
+What is the power spectrum in cosmology?
+A) Energy distribution
+B) Distribution of fluctuations by scale ✓
+C) Force spectrum
+D) Light analysis
+Question 59
+What is the Harrison-Zel'dovich spectrum?
+A) Light spectrum
+B) Scale-invariant primordial fluctuation spectrum ✓
+C) Energy spectrum
+D) Particle distribution
+Question 60 What is the spectral index?
+A) Color measurement
+B) Measure of scale dependence of fluctuations ✓
+C) Light index
+D) Energy level
+Question 61
+What is the curvature parameter?
+A) Bend measurement
+B) Measure of universe's spatial curvature ✓
+C) Shape value
+D) Geometry constant
+Question 62
+What is the density parameter Omega?
+A) Mass value
+B) Ratio of actual to critical density ✓
+C) Energy density
+D) Matter concentration
+Question 63
+What is the Lambda-CDM model?
+A) Greek physics
+B) Standard cosmological model with dark energy and cold dark matter ✓
+C) Light model
+D) Energy theory
+Question 64
+What is the coincidence problem?
+A) Random events
+B) Why dark energy and matter densities are similar now ✓
+C) Timing issue
+D) Probability question
+Question 65
+What is quintessence?
+A) Fifth element
+B) Dynamic dark energy field ✓
+C) Energy type
+D) Force field
+Question 66
+What is phantom energy?
+A) Ghost energy
+B) Dark energy with w < -1 ✓ C) Invisible force
+D) Negative energy
+Question 67
+What is the Big Rip scenario?
+A) Universe tearing
+B) Future where dark energy tears universe apart ✓
+C) Galaxy separation
+D) Space rupture
+Question 68
+What is the Big Crunch?
+A) Compression
+B) Hypothetical collapse of the universe ✓
+C) Final squeeze
+D) Gravity victory
+Question 69
+What is the Big Freeze?
+A) Ice age
+B) Universe expanding to maximum entropy ✓
+C) Cooling down
+D) Heat death
+Question 70
+What is conformal time?
+A) Relative time
+B) Time coordinate in expanding universe ✓
+C) Adjusted time
+D) Cosmic clock
+Question 71
+What is comoving distance?
+A) Moving together
+B) Distance accounting for expansion ✓
+C) Relative distance
+D) Adjusted measurement
+Question 72
+What is proper distance?
+A) Correct measurement
+B) Actual distance at specific time ✓
+C) Real distance
+D) True length
+Question 73 What is lookback time?
+A) Past viewing
+B) Time since light was emitted ✓
+C) Historical time
+D) Reverse time
+Question 74
+What is the cosmological redshift formula?
+A) Color change
+B) z = (λ_observed - λ_emitted) / λ_emitted ✓
+C) Distance formula
+D) Speed equation
+Question 75
+What is the Hubble time?
+A) Telescope age
+B) Inverse of Hubble constant ✓
+C) Observation period
+D) Universe age estimate 
+Question 76
+What is the solution to the horizon problem provided by inflation?
+A) Faster light
+B) Exponential expansion brought distant regions into causal contact ✓
+C) Higher temperature
+D) Quantum tunneling
+Question 77
+What is the mathematical form of the Friedmann equation for a flat universe?
+A) H² = 8πG/3
+B) H² = (8πG/3)ρ ✓
+C) H = 8πGρ
+D) H² = Gρ/3
+Question 78
+What is the relationship between the equation of state parameter w and pressure?
+A) w = ρ/P
+B) w = P/ρc² ✓
+C) w = P + ρ
+D) w = ρ - P
+Question 79
+What is the significance of w = -1 for dark energy?
+A) Maximum energy
+B) Cosmological constant behavior ✓
+C) Minimum pressure
+D) Zero density
+Question 80
+What is the Raychaudhuri equation used for?
+A) Distance calculation
+B) Describing expansion and shear of spacetime ✓
+C) Energy conservation
+D) Particle motion
+Question 81
+What is the role of the Higgs field in the early universe?
+A) Gravity source
+B) Giving particles mass through symmetry breaking ✓
+C) Energy creation
+D) Force unification
+Question 82 What is baryogenesis?
+A) Baryon decay
+B) Process creating baryon asymmetry ✓
+C) Proton formation
+D) Matter creation
+Question 83
+What is leptogenesis?
+A) Lepton decay
+B) Creating lepton asymmetry leading to baryon asymmetry ✓
+C) Electron formation
+D) Particle generation
+Question 84
+What is the Affleck-Dine mechanism?
+A) Particle collision
+B) Baryogenesis through scalar field dynamics ✓
+C) Energy transfer
+D) Force interaction
+Question 85
+What is the curvaton mechanism?
+A) Space bending
+B) Alternative to inflaton for generating fluctuations ✓
+C) Curvature creation
+D) Geometry formation
+Question 86
+What is the ekpyrotic universe model?
+A) Explosive model
+B) Universe from collision of branes ✓
+C) Cyclic expansion
+D) Membrane theory
+Question 87
+What is the cyclic model of the universe?
+A) Repeating patterns
+B) Universe undergoes infinite cycles of expansion and contraction ✓
+C) Circular motion
+D) Periodic events
+Question 88
+What is the conformal cyclic cosmology?
+A) Penrose's model
+B) Universe cycles through aeons ✓ C) Repeating cosmos
+D) Eternal return
+Question 89
+What is the role of topological defects in the early universe?
+A) Space errors
+B) Structures formed during phase transitions ✓
+C) Geometry flaws
+D) Field irregularities
+Question 90
+What are cosmic strings?
+A) Space threads
+B) One-dimensional topological defects ✓
+C) Energy lines
+D) Field connections
+Question 91
+What are domain walls in cosmology?
+A) Space barriers
+B) Two-dimensional topological defects ✓
+C) Energy boundaries
+D) Field separations
+Question 92
+What is the Bunch-Davies vacuum?
+A) Empty space
+B) Standard vacuum state during inflation ✓
+C) Quantum void
+D) Energy minimum
+Question 93
+What is the trans-Planckian problem?
+A) Size issue
+B) Quantum fluctuations originating at Planck scale ✓
+C) Energy problem
+D) Scale difficulty
+Question 94
+What is the measure problem in cosmology?
+A) Measurement error
+B) Defining probabilities in eternal inflation ✓
+C) Scale issue
+D) Quantification difficulty
+Question 95 What is the Boltzmann brain paradox?
+A) Intelligence problem
+B) Random fluctuations creating conscious observers ✓
+C) Brain formation
+D) Consciousness issue
+Question 96
+What is the anthropic principle in cosmology?
+A) Human importance
+B) Universe properties allowing observers to exist ✓
+C) Life requirement
+D) Observation effect
+Question 97
+What is the fine-tuning problem?
+A) Precision issue
+B) Why physical constants allow life ✓
+C) Adjustment difficulty
+D) Parameter problem
+Question 98
+What is the holographic principle?
+A) 3D imaging
+B) Universe information on lower-dimensional boundary ✓
+C) Projection theory
+D) Dimensional reduction
+Question 99
+What is the Wheeler-DeWitt equation?
+A) Wave equation
+B) Quantum equation for the universe ✓
+C) Gravity formula
+D) Cosmological equation
+Question 100
+What is the no-boundary proposal?
+A) Infinite universe
+B) Hawking's model of finite unbounded universe ✓
+C) Borderless space
+D) Edge elimination 

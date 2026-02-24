@@ -1,0 +1,586 @@
+Question 1
+What is a planet?
+A) A star
+B) A celestial body orbiting a star ✓
+C) A moon
+D) An asteroid
+Question 2
+How many planets are in our solar system?
+A) 7
+B) 8 ✓
+C) 9
+D) 10
+Question 3
+Which planet is closest to the Sun?
+A) Venus
+B) Mercury ✓
+C) Earth
+D) Mars
+Question 4
+Which planet is known as the Red Planet?
+A) Venus
+B) Jupiter
+C) Mars ✓
+D) Saturn
+Question 5
+Which is the largest planet in our solar system?
+A) Saturn
+B) Jupiter ✓
+C) Neptune
+D) Uranus
+Question 6
+Which planet has the most visible rings? A) Jupiter
+B) Saturn ✓
+C) Uranus
+D) Neptune
+Question 7
+Which planet is known as Earth's twin?
+A) Mars
+B) Venus ✓
+C) Mercury
+D) Jupiter
+Question 8
+What are the inner planets called?
+A) Gas giants
+B) Terrestrial planets ✓
+C) Ice giants
+D) Rocky giants
+Question 9
+What are the outer planets called?
+A) Rocky planets
+B) Gas giants ✓
+C) Ice planets
+D) Outer giants
+Question 10
+Which planet rotates on its side?
+A) Neptune
+B) Saturn
+C) Uranus ✓
+D) Jupiter
+Question 11
+Which planet has the Great Red Spot?
+A) Mars
+B) Jupiter ✓
+C) Saturn
+D) Neptune
+Question 12
+What is Pluto classified as now?
+A) Planet
+B) Dwarf planet ✓
+C) Asteroid D) Moon
+Question 13
+Which planet is the hottest?
+A) Mercury
+B) Venus ✓
+C) Mars
+D) Earth
+Question 14
+Which planet has the shortest day?
+A) Earth
+B) Mars
+C) Jupiter ✓
+D) Saturn
+Question 15
+Which planet has the longest year?
+A) Uranus
+B) Neptune ✓
+C) Saturn
+D) Jupiter
+Question 16
+What is the asteroid belt?
+A) Planet ring
+B) Region of asteroids between Mars and Jupiter ✓
+C) Comet path
+D) Debris field
+Question 17
+What is the Kuiper Belt?
+A) Asteroid region
+B) Region beyond Neptune with icy objects ✓
+C) Comet belt
+D) Outer ring
+Question 18
+What is an exoplanet?
+A) Former planet
+B) Planet outside our solar system ✓
+C) Exploded planet
+D) Extra planet
+Question 19 What is a gas giant?
+A) Big star
+B) Large planet mostly made of gas ✓
+C) Giant cloud
+D) Huge atmosphere
+Question 20
+What is an ice giant?
+A) Frozen planet
+B) Planet with icy composition (Uranus, Neptune) ✓
+C) Cold giant
+D) Ice world
+Question 21
+Which planet has the most moons?
+A) Saturn ✓
+B) Jupiter
+C) Uranus
+D) Neptune
+Question 22
+What is planetary orbit?
+A) Planet rotation
+B) Path a planet takes around the Sun ✓
+C) Planet movement
+D) Circular path
+Question 23
+What is planetary rotation?
+A) Orbit motion
+B) Planet spinning on its axis ✓
+C) Revolution
+D) Turning motion
+Question 24
+What is an astronomical unit (AU)?
+A) Space measurement
+B) Earth-Sun distance ✓
+C) Planet size
+D) Distance unit
+Question 25
+What is planetary albedo?
+A) Planet color
+B) Reflectivity of a planet ✓ C) Brightness
+D) Light reflection
+Question 26
+What is a planetary atmosphere?
+A) Air layer
+B) Layer of gases surrounding a planet ✓
+C) Sky cover
+D) Gas envelope
+Question 27
+What is the greenhouse effect?
+A) Plant growth
+B) Atmospheric warming by trapped heat ✓
+C) Heat retention
+D) Temperature increase
+Question 28
+What is planetary magnetosphere?
+A) Magnetic field
+B) Region dominated by planet's magnetic field ✓
+C) Magnetic zone
+D) Field area
+Question 29
+What is a planetary core?
+A) Center part
+B) Central region of a planet ✓
+C) Inner sphere
+D) Middle section
+Question 30
+What is a planetary mantle?
+A) Cover layer
+B) Layer between core and crust ✓
+C) Middle layer
+D) Coating
+Question 31
+What is planetary differentiation?
+A) Being different
+B) Separation into layers by density ✓
+C) Layer formation
+D) Material sorting
+Question 32 What is tidal locking?
+A) Locked orbit
+B) Same face always toward parent body ✓
+C) Tide effect
+D) Rotation lock
+Question 33
+What is retrograde rotation?
+A) Backward spin
+B) Rotation opposite to orbital direction ✓
+C) Reverse rotation
+D) Opposite spin
+Question 34
+What is orbital eccentricity?
+A) Orbit shape
+B) Deviation from circular orbit ✓
+C) Ellipse measure
+D) Path variation
+Question 35
+What is orbital inclination?
+A) Orbit tilt
+B) Angle of orbit relative to reference plane ✓
+C) Path angle
+D) Tilt degree
+Question 36
+What is a hot Jupiter?
+A) Warm planet
+B) Gas giant very close to its star ✓
+C) Hot gas planet
+D) Near star planet
+Question 37
+What is a super-Earth?
+A) Big Earth
+B) Exoplanet larger than Earth but smaller than Neptune ✓
+C) Large planet
+D) Enhanced Earth
+Question 38
+What is the habitable zone?
+A) Living area
+B) Region where liquid water can exist ✓ C) Life zone
+D) Comfortable distance
+Question 39
+What is planetary migration?
+A) Planet movement
+B) Planet changing orbital distance over time ✓
+C) Orbit shift
+D) Position change
+Question 40
+What is a rogue planet?
+A) Bad planet
+B) Planet not orbiting any star ✓
+C) Wandering planet
+D) Free planet 
+Question 41
+What is the Nice model?
+A) Pleasant theory
+B) Model of outer planet migration ✓
+C) French model
+D) Solar system theory
+Question 42
+What is the Grand Tack hypothesis?
+A) Jupiter's path
+B) Jupiter migrated inward then outward ✓
+C) Planet movement
+D) Migration theory
+Question 43
+What is the core accretion model?
+A) Core growth
+B) Planet formation by gradual accumulation ✓
+C) Accretion theory
+D) Formation model
+Question 44
+What is the disk instability model?
+A) Disk collapse
+B) Rapid planet formation from disk fragmentation ✓
+C) Instability theory
+D) Quick formation
+Question 45
+What is the frost line (snow line)?
+A) Ice boundary
+B) Distance where volatiles condense ✓
+C) Freeze point
+D) Cold line
+Question 46
+What is planetary accretion?
+A) Growth process
+B) Accumulation of material forming planets ✓
+C) Material gathering
+D) Mass collection
+Question 47 What are planetesimals?
+A) Small planets
+B) Building blocks of planets ✓
+C) Planet pieces
+D) Formation bodies
+Question 48
+What is oligarchic growth?
+A) Ruler growth
+B) Dominant planetesimals growing faster ✓
+C) Selective growth
+D) Preferred accumulation
+Question 49
+What is runaway growth?
+A) Fast growth
+B) Rapid accretion by largest bodies ✓
+C) Uncontrolled growth
+D) Accelerated accumulation
+Question 50
+What is the late heavy bombardment?
+A) Recent impacts
+B) Period of intense impacts 4 billion years ago ✓
+C) Late collisions
+D) Heavy impacts
+Question 51
+What is planetary outgassing?
+A) Gas release
+B) Release of gases from planetary interior ✓
+C) Atmosphere formation
+D) Gas emission
+Question 52
+What is atmospheric escape?
+A) Gas loss
+B) Loss of atmospheric gases to space ✓
+C) Atmosphere leaking
+D) Gas escape
+Question 53
+What is Jeans escape?
+A) Thermal escape
+B) Atmospheric loss by thermal velocity ✓ C) Gas evaporation
+D) Heat escape
+Question 54
+What is hydrodynamic escape?
+A) Water escape
+B) Bulk atmospheric loss by heating ✓
+C) Flow escape
+D) Mass loss
+Question 55
+What is the Roche limit?
+A) Distance limit
+B) Distance where tidal forces break up objects ✓
+C) Tidal boundary
+D) Breakup distance
+Question 56
+What is tidal heating?
+A) Ocean heat
+B) Internal heating by tidal forces ✓
+C) Tide warmth
+D) Gravitational heating
+Question 57
+What is orbital resonance?
+A) Orbit harmony
+B) Orbital periods in simple ratio ✓
+C) Synchronized orbits
+D) Period matching
+Question 58
+What is the Laplace resonance?
+A) Special resonance
+B) 1:2:4 resonance of Io, Europa, Ganymede ✓
+C) Triple resonance
+D) Moon harmony
+Question 59
+What is planetary precession?
+A) Wobble motion
+B) Slow change in orbital orientation ✓
+C) Axis shift
+D) Rotation change
+Question 60 What is axial precession?
+A) Axis wobble
+B) Slow change in rotation axis direction ✓
+C) Spin shift
+D) Pole movement
+Question 61
+What is the Milankovitch cycles?
+A) Climate cycles
+B) Orbital variations affecting climate ✓
+C) Earth cycles
+D) Periodic changes
+Question 62
+What is planetary obliquity?
+A) Tilt angle
+B) Angle between rotation axis and orbital plane ✓
+C) Axis inclination
+D) Rotation tilt
+Question 63
+What is the Titius-Bode law?
+A) Distance rule
+B) Empirical relation for planetary distances ✓
+C) Spacing law
+D) Orbit formula
+Question 64
+What is mean motion resonance?
+A) Average motion
+B) Resonance based on orbital periods ✓
+C) Motion harmony
+D) Period resonance
+Question 65
+What is secular resonance?
+A) Long-term resonance
+B) Resonance of precession rates ✓
+C) Slow resonance
+D) Gradual harmony
+Question 66
+What is the Kozai mechanism?
+A) Orbit change
+B) Exchange between eccentricity and inclination ✓ C) Kozai effect
+D) Orbital evolution
+Question 67
+What is planetary bombardment?
+A) Impact period
+B) Intense impacts during formation ✓
+C) Collision phase
+D) Impact era
+Question 68
+What is the transit method for detecting exoplanets?
+A) Passing detection
+B) Detecting dimming as planet crosses star ✓
+C) Light blocking
+D) Shadow method
+Question 69
+What is the radial velocity method?
+A) Speed detection
+B) Detecting star wobble from planet gravity ✓
+C) Velocity measurement
+D) Motion detection
+Question 70
+What is direct imaging of exoplanets?
+A) Taking pictures
+B) Photographing planets directly ✓
+C) Visual detection
+D) Image capture
+Question 71
+What is gravitational microlensing?
+A) Lens effect
+B) Detecting planets by gravitational lensing ✓
+C) Gravity bending
+D) Light magnification
+Question 72
+What is the equilibrium temperature of a planet?
+A) Balance temperature
+B) Temperature balancing absorbed and emitted radiation ✓
+C) Average temperature
+D) Stable temperature
+Question 73 What is planetary Bond albedo?
+A) Total reflection
+B) Fraction of total radiation reflected ✓
+C) Complete albedo
+D) Full reflectivity
+Question 74
+What is the Hill sphere?
+A) Gravity sphere
+B) Region where planet's gravity dominates ✓
+C) Influence zone
+D) Gravitational domain
+Question 75
+What is the planet formation timescale?
+A) Formation time
+B) Time required to form planets (1-10 million years) ✓
+C) Growth period
+D) Development duration
+Question 76
+What is the minimum mass solar nebula (MMSN)?
+A) Smallest nebula
+B) Minimum disk mass to form solar system ✓
+C) Mass requirement
+D) Formation minimum
+Question 77
+What is the Safronov number?
+A) Formation parameter
+B) Ratio of escape velocity to orbital velocity ✓
+C) Accretion number
+D) Growth parameter
+Question 78
+What is the isolation mass?
+A) Alone mass
+B) Maximum mass from local feeding zone ✓
+C) Separated mass
+D) Individual limit
+Question 79
+What is Type I migration?
+A) First migration
+B) Planet migration by disk torques ✓
+C) Initial movement
+D) Primary migration
+Question 80
+What is Type II migration?
+A) Second migration
+B) Migration of gap-opening planets ✓
+C) Later migration
+D) Secondary movement
+Question 81
+What is Type III migration?
+A) Third migration
+B) Rapid migration in massive disks ✓
+C) Fast migration
+D) Quick movement
+Question 82 What is the pebble accretion model?
+A) Small particle growth
+B) Rapid growth by accreting cm-sized particles ✓
+C) Pebble collection
+D) Particle accumulation
+Question 83
+What is the streaming instability?
+A) Flow instability
+B) Mechanism concentrating particles for planetesimal formation ✓
+C) Stream collapse
+D) Particle clumping
+Question 84
+What is the viscous timescale of protoplanetary disk?
+A) Disk lifetime
+B) Time for disk to evolve viscously ✓
+C) Evolution time
+D) Viscosity period
+Question 85
+What is the dead zone in protoplanetary disks?
+A) Inactive region
+B) Region with low ionization and turbulence ✓
+C) Quiet zone
+D) Still area
+Question 86
+What is the magnetorotational instability (MRI)?
+A) Magnetic instability
+B) Instability driving disk turbulence ✓
+C) Rotation instability
+D) MRI effect
+Question 87
+What is photoevaporation of protoplanetary disks?
+A) Light evaporation
+B) Disk dispersal by stellar radiation ✓
+C) Photo removal
+D) Radiation loss
+Question 88
+What is the X-wind model?
+A) Wind theory
+B) Disk wind launching from near star ✓ C) X-ray wind
+D) Stellar wind
+Question 89
+What is the planet-disk interaction?
+A) Mutual effect
+B) Gravitational interaction between planet and disk ✓
+C) Combined influence
+D) Reciprocal force
+Question 90
+What is gap opening in protoplanetary disks?
+A) Hole formation
+B) Planet clearing annular gap in disk ✓
+C) Space creation
+D) Clearing region
+Question 91
+What is the thermal mass in planet formation?
+A) Heat mass
+B) Mass where planet significantly heats surroundings ✓
+C) Temperature mass
+D) Warming mass
+Question 92
+What is the critical core mass?
+A) Important mass
+B) Core mass triggering runaway gas accretion ✓
+C) Threshold mass
+D) Key mass
+Question 93
+What is the Kelvin-Helmholtz contraction for planets?
+A) Planet shrinking
+B) Gravitational contraction releasing heat ✓
+C) Cooling contraction
+D) Thermal shrinking
+Question 94
+What is the Rayleigh-Taylor instability in planets?
+A) Layer instability
+B) Instability when dense fluid over less dense ✓
+C) Density instability
+D) Stratification instability
+Question 95 What is the equation of state for planetary interiors?
+A) Pressure law
+B) P-ρ-T relationship for planetary materials ✓
+C) State equation
+D) Interior formula
+Question 96
+What is the Birch-Murnaghan equation?
+A) Compression equation
+B) Equation of state for compressed materials ✓
+C) Pressure formula
+D) Density equation
+Question 97
+What is the Hugoniot curve?
+A) Shock curve
+B) Locus of states in shock compression ✓
+C) Impact path
+D) Compression line
+Question 98
+What is the Grüneisen parameter?
+A) Thermal parameter
+B) Relates thermal pressure to internal energy ✓
+C) Heat constant
+D) Energy parameter
+Question 99
+What is the Adams-Williamson equation?
+A) Density equation
+B) Relates density gradient to pressure in planet ✓
+C) Interior formula
+D) Pressure gradient
+Question 100
+What is the Chandrasekhar mass for planets?
+A) Maximum mass
+B) Mass limit for electron degeneracy support ✓
+C) Planet limit
+D) Critical mass
