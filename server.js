@@ -1,3 +1,6 @@
+const Team = require("./models/Team");
+const bcrypt = require("bcrypt");
+
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
