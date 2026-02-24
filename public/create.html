@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Team</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    input { margin: 10px; padding: 8px; }
+    button { padding: 10px 20px; }
+  </style>
+</head>
+<body>
+
+<h2>Create Team</h2>
+
+<input id="name" placeholder="Team Name"><br>
+<input id="password" type="password" placeholder="Password"><br>
+<input id="memberName" placeholder="Your Name"><br>
+
+<button onclick="createTeam()">Create</button>
+
+<p id="result"></p>
+
+<script>
+async function createTeam() {
+  const res = await fetch("/api/team/create", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      password: document.getElementById("password").value,
+      memberName: document.getElementById("memberName").value
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("result").innerText = data.message;
+}
+</script>
+
+</body>
+</html>
