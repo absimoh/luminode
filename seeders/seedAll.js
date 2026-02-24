@@ -86,7 +86,6 @@ async function seedAll() {
   await seedCategory("planets.txt", "Planets");
 
   console.log("🔥 All Categories Seeded Successfully");
-  process.exit();
 }
 
 seedAll();

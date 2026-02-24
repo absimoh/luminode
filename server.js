@@ -6,55 +6,31 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
+
+const seedAll = require("./seeders/seedAll");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-const path = require("path");
 app.use(express.static(path.join(__dirname, "public")));
+
 /* ================= DATABASE ================= */
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log("Connection Error:", err));
 
-/* ================= AUTO SEED (PRODUCTION SAFE) ================= */
-
 mongoose.connection.once("open", async () => {
   const count = await Question.countDocuments();
 
   if (count === 0) {
-    console.log("Seeding initial questions...");
-
-    await Question.insertMany([
-      {
-        category: "AI",
-        difficulty: "easy",
-        question: "What does AI stand for?",
-        options: [
-          "Automated Intelligence",
-          "Artificial Intelligence",
-          "Advanced Integration",
-          "Algorithmic Information"
-        ],
-        correctAnswer: "Artificial Intelligence",
-        points: 1
-      },
-      {
-        category: "Planets",
-        difficulty: "easy",
-        question: "Which planet is closest to the Sun?",
-        options: ["Venus", "Mercury", "Earth", "Mars"],
-        correctAnswer: "Mercury",
-        points: 1
-      }
-    ]);
-
-    console.log("Questions seeded successfully.");
+    console.log("Database empty. Running full seed...");
+    await seedAll();
+    console.log("Full seed completed.");
   } else {
-    console.log("Questions already exist. Skipping seed.");
+    console.log(`Database has ${count} questions.`);
   }
 });
 
@@ -68,6 +44,24 @@ app.get("/", (req, res) => {
 
 app.get("/api/check", (req, res) => {
   res.json({ status: "API working ✅" });
+});
+
+/* ================= GET QUESTIONS ================= */
+
+app.get("/api/questions", async (req, res) => {
+  try {
+    const { category, difficulty } = req.query;
+
+    let filter = {};
+    if (category) filter.category = category;
+    if (difficulty) filter.difficulty = difficulty;
+
+    const questions = await Question.find(filter).select("-correctAnswer");
+    res.json(questions);
+
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching questions" });
+  }
 });
 
 /* ================= CREATE TEAM ================= */
@@ -153,24 +147,6 @@ app.post("/api/team/join", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
-  }
-});
-
-/* ================= GET QUESTIONS ================= */
-
-app.get("/api/questions", async (req, res) => {
-  try {
-    const { category, difficulty } = req.query;
-
-    let filter = {};
-    if (category) filter.category = category;
-    if (difficulty) filter.difficulty = difficulty;
-
-    const questions = await Question.find(filter).select("-correctAnswer");
-    res.json(questions);
-
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching questions" });
   }
 });
 
