@@ -15,8 +15,46 @@ app.use(express.json());
 /* ================= DATABASE ================= */
 
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log("Connection Error:", err));
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log("Connection Error:", err));
+
+/* ================= AUTO SEED (PRODUCTION SAFE) ================= */
+
+mongoose.connection.once("open", async () => {
+  const count = await Question.countDocuments();
+
+  if (count === 0) {
+    console.log("Seeding initial questions...");
+
+    await Question.insertMany([
+      {
+        category: "AI",
+        difficulty: "easy",
+        question: "What does AI stand for?",
+        options: [
+          "Automated Intelligence",
+          "Artificial Intelligence",
+          "Advanced Integration",
+          "Algorithmic Information"
+        ],
+        correctAnswer: "Artificial Intelligence",
+        points: 1
+      },
+      {
+        category: "Planets",
+        difficulty: "easy",
+        question: "Which planet is closest to the Sun?",
+        options: ["Venus", "Mercury", "Earth", "Mars"],
+        correctAnswer: "Mercury",
+        points: 1
+      }
+    ]);
+
+    console.log("Questions seeded successfully.");
+  } else {
+    console.log("Questions already exist. Skipping seed.");
+  }
+});
 
 /* ================= ROOT ================= */
 
@@ -137,7 +175,6 @@ app.post("/api/answer", async (req, res) => {
       return res.status(404).json({ message: "Team or question not found" });
     }
 
-    // منع تكرار حل نفس السؤال
     if (team.solvedChallenges.includes(question._id)) {
       return res.status(400).json({ message: "Already solved" });
     }
