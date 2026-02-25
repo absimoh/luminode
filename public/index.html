@@ -1,31 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Luminode</title>
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      margin-top: 120px;
-    }
-    button {
-      padding: 15px 30px;
-      margin: 20px;
-      font-size: 16px;
-    }
-  </style>
+  <title>Luminode Quiz</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<h1>🔥 Luminode Challenge</h1>
+<div class="container">
+  <h1>🔥 Luminode</h1>
 
-<button onclick="location.href='create.html'">
-  Create Team
-</button>
+  <div class="buttons">
+    <button onclick="showCreate()">Create Team</button>
+    <button onclick="showJoin()">Join Team</button>
+  </div>
 
-<button onclick="location.href='join.html'">
-  Join Team
-</button>
+  <div id="formArea"></div>
+</div>
 
+<script src="js/auth.js"></script>
 </body>
 </html>
