@@ -8,8 +8,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 
-const seedAll = require("./seeders/seedAll");
-
 const app = express();
 
 app.use(cors());
@@ -21,18 +19,6 @@ app.use(express.static(path.join(__dirname, "public")));
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log("Connection Error:", err));
-
-mongoose.connection.once("open", async () => {
-  const count = await Question.countDocuments();
-
-  if (count === 0) {
-    console.log("Database empty. Running full seed...");
-    await seedAll();
-    console.log("Full seed completed.");
-  } else {
-    console.log(`Database has ${count} questions.`);
-  }
-});
 
 /* ================= ROOT ================= */
 
