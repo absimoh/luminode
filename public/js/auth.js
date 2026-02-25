@@ -12,18 +12,37 @@ function showJoin() {
   fetch("/api/leaderboard")
     .then(res => res.json())
     .then(data => {
-      let options = data.map(t => 
-        `<option value="${t.name}">${t.name}</option>`
-      ).join("");
+
+      if (data.length === 0) {
+        document.getElementById("formArea").innerHTML =
+          "<p>No teams available yet.</p>";
+        return;
+      }
+
+      let teamsHTML = data.map(team => `
+        <div class="team-card" onclick="selectTeam('${team.name}')">
+          <h3>${team.name}</h3>
+          <p>Score: ${team.score}</p>
+        </div>
+      `).join("");
 
       document.getElementById("formArea").innerHTML = `
-        <h2>Join Team</h2>
-        <select id="teamSelect">${options}</select><br>
-        <input id="joinPassword" type="password" placeholder="Password"><br>
-        <input id="joinMemberName" placeholder="Your Name"><br>
-        <button onclick="joinTeam()">Join</button>
+        <h2>Select Team</h2>
+        <div class="teams-grid">
+          ${teamsHTML}
+        </div>
+        <div id="joinForm"></div>
       `;
     });
+}
+
+function selectTeam(teamName) {
+  document.getElementById("joinForm").innerHTML = `
+    <h3>Joining: ${teamName}</h3>
+    <input id="joinPassword" type="password" placeholder="Password"><br>
+    <input id="joinMemberName" placeholder="Your Name"><br>
+    <button onclick="joinTeam('${teamName}')">Join</button>
+  `;
 }
 
 function createTeam() {
@@ -47,12 +66,12 @@ function createTeam() {
   });
 }
 
-function joinTeam() {
+function joinTeam(teamName) {
   fetch("/api/team/join", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: document.getElementById("teamSelect").value,
+      name: teamName,
       password: document.getElementById("joinPassword").value,
       memberName: document.getElementById("joinMemberName").value
     })
