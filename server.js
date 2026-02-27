@@ -46,14 +46,35 @@ app.post("/api/team/join", async (req, res) => {
   res.json({ message: "Joined successfully" });
 });
 
-/* ================= QUESTIONS ================= */
-app.get("/api/questions", async (req, res) => {
-  const control = await Control.findOne();
-  if (!control || !control.challengesOpen)
-    return res.json({ message: "Challenges closed" });
+/* ================= GET CATEGORIES ================= */
+app.get("/api/categories", async (req, res) => {
+  try {
+    const categories = await Question.distinct("category");
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching categories" });
+  }
+});
 
-  const questions = await Question.find({ isActive: true }).select("-correctAnswer");
-  res.json(questions);
+/* ================= GET QUESTIONS BY CATEGORY ================= */
+app.get("/api/questions/:category", async (req, res) => {
+  try {
+    const control = await Control.findOne();
+
+    if (!control || !control.challengesOpen) {
+      return res.status(403).json({ message: "Challenges closed" });
+    }
+
+    const questions = await Question.find({
+      category: req.params.category,
+      isActive: true
+    }).select("-correctAnswer");
+
+    res.json(questions);
+
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching questions" });
+  }
 });
 
 /* ================= LEADERBOARD ================= */
@@ -88,3 +109,4 @@ app.post("/api/control", async (req, res) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log("Server running on port " + PORT));
+
