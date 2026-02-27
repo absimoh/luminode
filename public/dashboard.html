@@ -1,42 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard - Luminode</title>
+  <title>Dashboard</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="dashboard">
-
-  <div class="sidebar">
-    <h2>Categories</h2>
-    <button onclick="loadCategory('AI')">AI</button>
-    <button onclick="loadCategory('Planets')">Planets</button>
-    <button onclick="loadCategory('Stars')">Stars</button>
-    <button onclick="loadCategory('Galaxies')">Galaxies</button>
-    <button onclick="loadCategory('Moons')">Moons</button>
-    <button onclick="loadCategory('Universe')">Universe</button>
+<div class="overlay">
+  <div class="card">
+    <h2>👥 Team Dashboard</h2>
+    <p><strong>Team:</strong> <span id="team"></span></p>
+    <p><strong>Score:</strong> <span id="score">0</span></p>
+    <button onclick="goLeaderboard()">View Leaderboard</button>
   </div>
 
-  <div class="main">
-
-    <div class="topbar">
-      <span id="teamInfo"></span>
-      <span id="scoreInfo"></span>
-    </div>
-
-    <div class="difficulty-tabs">
-      <button onclick="setDifficulty('easy')">Easy</button>
-      <button onclick="setDifficulty('medium')">Medium</button>
-      <button onclick="setDifficulty('hard')">Hard</button>
-    </div>
-
-    <div id="questionsGrid" class="questions-grid"></div>
-
+  <div class="card">
+    <h3>🧠 Challenges</h3>
+    <div id="questions"></div>
   </div>
-
 </div>
 
-<script src="js/dashboard.js"></script>
+<script src="js/app.js"></script>
+<script>
+loadDashboard();
+</script>
+
 </body>
 </html>

@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Luminode Quiz</title>
+  <title>Luminode Competition</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="container">
-  <h1>🔥 Luminode</h1>
+<div class="overlay">
+  <div class="card center" style="max-width:400px;margin:auto;">
+    <h1>🚀 Luminode</h1>
+    <p>AI & Space Competition</p>
 
-  <div class="buttons">
-    <button onclick="showCreate()">Create Team</button>
-    <button onclick="showJoin()">Join Team</button>
+    <input id="teamName" placeholder="Team Name">
+    <input id="password" type="password" placeholder="Password">
+    <input id="memberName" placeholder="Your Name">
+
+    <button onclick="join()">Join Team</button>
   </div>
-
-  <div id="formArea"></div>
 </div>
 
-<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
