@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Control</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="overlay">
+
+  <div class="navbar">
+    <div class="logo-group">
+      <img src="logo.png" class="logo">
+      <img src="org.png" class="logo small">
+    </div>
+  </div>
+
+  <div class="main-center">
+    <h1>Admin Control Panel</h1>
+
+    <div class="teams-grid">
+
+      <div class="team-card" onclick="toggleChallenges(true)">
+        🔓 Open Challenges
+      </div>
+
+      <div class="team-card" onclick="toggleChallenges(false)">
+        🔒 Close Challenges
+      </div>
+
+      <div class="team-card" onclick="toggleLeaderboard(true)">
+        🏆 Open Leaderboard
+      </div>
+
+      <div class="team-card" onclick="toggleLeaderboard(false)">
+        🚫 Close Leaderboard
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Abbas Mohammed Al-Mukhtafi. All Rights Reserved.
+  </footer>
+
+</div>
+
+<script>
+async function toggleChallenges(state) {
+  await fetch("/api/admin/toggle", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      showChallenges: state,
+      showRanking: undefined
+    })
+  });
+  alert("Challenges Updated");
+}
+
+async function toggleLeaderboard(state) {
+  await fetch("/api/admin/toggle", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      showChallenges: undefined,
+      showRanking: state
+    })
+  });
+  alert("Leaderboard Updated");
+}
+</script>
+
+</body>
+</html>
