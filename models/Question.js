@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
-  category: { type: String, required: true },
-  difficulty: { type: String, required: true },
-  question: { type: String, required: true },
-  options: { type: [String], required: true },
-  correctAnswer: { type: String, required: true },
+  question: String,
+  options: [String],
+  correctAnswer: String,
   points: { type: Number, default: 1 },
-  isActive: { type: Boolean, default: false }
+  isActive: { type: Boolean, default: true }
 });
 
 module.exports = mongoose.model("Question", questionSchema);
