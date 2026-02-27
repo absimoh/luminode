@@ -5,6 +5,7 @@ const questionSchema = new mongoose.Schema({
   options: [String],
   correctAnswer: String,
   points: { type: Number, default: 1 },
+  category: String,
   isActive: { type: Boolean, default: true }
 });
 
