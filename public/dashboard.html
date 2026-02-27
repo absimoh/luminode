@@ -9,35 +9,34 @@
 <div class="overlay">
 
   <div class="navbar">
-    <img src="logo.jpg" class="logo">
+    <div class="logo-group">
+      <img src="org.png" class="logo small">
+      <img src="logo.png" class="logo">
+    </div>
     <div class="nav-links">
-      <a href="/dashboard.html">الرئيسية</a>
-      <a href="/leaderboard.html">الترتيب</a>
+      <a href="/dashboard.html">Home</a>
+      <a href="/leaderboard.html">Leaderboard</a>
     </div>
   </div>
 
   <div class="container">
-
     <div class="card">
-      <h2>👥 Team Dashboard</h2>
+      <h2>Team Dashboard</h2>
       <p><strong>Team:</strong> <span id="team"></span></p>
       <p><strong>Score:</strong> <span id="score">0</span></p>
-      <button onclick="sendTicket()">طلب مساعدة</button>
+      <button onclick="sendTicket()">Request Help</button>
     </div>
 
     <div class="card">
-      <h3>🧠 Challenges</h3>
+      <h3>Challenges</h3>
       <div id="questions"></div>
     </div>
-
   </div>
 
 </div>
 
 <script src="js/app.js"></script>
-<script>
-loadDashboard();
-</script>
+<script>loadDashboard();</script>
 
 </body>
 </html>
