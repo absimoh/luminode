@@ -28,14 +28,13 @@ async function loadDashboard() {
   const res = await fetch("/api/questions");
   const data = await res.json();
 
-  if (!res.ok) {
-    document.getElementById("questions").innerHTML =
-      `<p>${data.message}</p>`;
-    return;
-  }
-
   const container = document.getElementById("questions");
   container.innerHTML = "";
+
+  if (!res.ok) {
+    container.innerHTML = `<p>${data.message}</p>`;
+    return;
+  }
 
   data.forEach(q => {
     const div = document.createElement("div");
@@ -71,25 +70,18 @@ async function answer(questionId, answer) {
   }
 }
 
-function goLeaderboard() {
-  window.location.href = "/leaderboard.html";
-}
-
-function goBack() {
-  window.location.href = "/dashboard.html";
-}
-
 async function loadLeaderboard() {
   const res = await fetch("/api/leaderboard");
   const data = await res.json();
 
+  const table = document.getElementById("leaderboard");
+  table.innerHTML = "";
+
   if (!res.ok) {
-    document.getElementById("leaderboard").innerHTML =
-      `<tr><td>${data.message}</td></tr>`;
+    table.innerHTML = `<tr><td>${data.message}</td></tr>`;
     return;
   }
 
-  const table = document.getElementById("leaderboard");
   table.innerHTML = "<tr><th>Rank</th><th>Team</th><th>Score</th></tr>";
 
   data.forEach((team, index) => {
@@ -101,4 +93,20 @@ async function loadLeaderboard() {
       </tr>
     `;
   });
+}
+
+async function sendTicket() {
+  const message = prompt("اكتب مشكلتك:");
+  if (!message) return;
+
+  const teamName = localStorage.getItem("teamName");
+
+  const res = await fetch("/api/ticket", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ teamName, message })
+  });
+
+  const data = await res.json();
+  alert(data.message);
 }

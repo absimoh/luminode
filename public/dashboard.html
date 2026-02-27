@@ -7,17 +7,31 @@
 <body>
 
 <div class="overlay">
-  <div class="card">
-    <h2>👥 Team Dashboard</h2>
-    <p><strong>Team:</strong> <span id="team"></span></p>
-    <p><strong>Score:</strong> <span id="score">0</span></p>
-    <button onclick="goLeaderboard()">View Leaderboard</button>
+
+  <div class="navbar">
+    <img src="logo.jpg" class="logo">
+    <div class="nav-links">
+      <a href="/dashboard.html">الرئيسية</a>
+      <a href="/leaderboard.html">الترتيب</a>
+    </div>
   </div>
 
-  <div class="card">
-    <h3>🧠 Challenges</h3>
-    <div id="questions"></div>
+  <div class="container">
+
+    <div class="card">
+      <h2>👥 Team Dashboard</h2>
+      <p><strong>Team:</strong> <span id="team"></span></p>
+      <p><strong>Score:</strong> <span id="score">0</span></p>
+      <button onclick="sendTicket()">طلب مساعدة</button>
+    </div>
+
+    <div class="card">
+      <h3>🧠 Challenges</h3>
+      <div id="questions"></div>
+    </div>
+
   </div>
+
 </div>
 
 <script src="js/app.js"></script>
