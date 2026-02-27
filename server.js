@@ -1,12 +1,13 @@
-const Team = require("./models/Team");
-const Question = require("./models/Question");
-const bcrypt = require("bcrypt");
-
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
 const path = require("path");
+
+const Team = require("./models/Team");
+const Question = require("./models/Question");
+const Control = require("./models/Control");
 
 const app = express();
 
@@ -23,26 +24,30 @@ mongoose.connect(process.env.MONGO_URI)
 /* ================= ROOT ================= */
 
 app.get("/", (req, res) => {
-  res.send("🔥 Luminode is Live");
+  res.send("🔥 Luminode Competition Live");
 });
 
-/* ================= CHECK ================= */
-
-app.get("/api/check", (req, res) => {
-  res.json({ status: "API working ✅" });
-});
-
-/* ================= GET QUESTIONS ================= */
+/* ================= QUESTIONS ================= */
 
 app.get("/api/questions", async (req, res) => {
   try {
+    const control = await Control.findOne();
+
+    if (!control || !control.showChallenges) {
+      return res.status(403).json({
+        message: "Challenges are not available yet"
+      });
+    }
+
     const { category, difficulty } = req.query;
 
-    let filter = {};
+    let filter = { isActive: true };
+
     if (category) filter.category = category;
     if (difficulty) filter.difficulty = difficulty;
 
     const questions = await Question.find(filter).select("-correctAnswer");
+
     res.json(questions);
 
   } catch (error) {
@@ -70,25 +75,14 @@ app.post("/api/team/create", async (req, res) => {
     const newTeam = new Team({
       name,
       password: hashedPassword,
-      members: [{ name: memberName }],
-      score: 0,
-      solvedChallenges: []
+      members: [{ name: memberName }]
     });
 
     await newTeam.save();
 
-    res.status(201).json({
-      message: "Team created successfully",
-      team: {
-        id: newTeam._id,
-        name: newTeam.name,
-        members: newTeam.members,
-        score: newTeam.score
-      }
-    });
+    res.status(201).json({ message: "Team created successfully" });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -99,78 +93,55 @@ app.post("/api/team/join", async (req, res) => {
   try {
     const { name, password, memberName } = req.body;
 
-    if (!name || !password || !memberName) {
-      return res.status(400).json({ message: "All fields required" });
-    }
-
     const team = await Team.findOne({ name });
-    if (!team) {
-      return res.status(404).json({ message: "Team not found" });
-    }
+    if (!team) return res.status(404).json({ message: "Team not found" });
 
     const isMatch = await bcrypt.compare(password, team.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Wrong password" });
-    }
-
-    if (team.members.length >= 4) {
-      return res.status(400).json({ message: "Team is full" });
-    }
+    if (!isMatch) return res.status(400).json({ message: "Wrong password" });
 
     team.members.push({ name: memberName });
     await team.save();
 
-    res.json({
-      message: "Joined successfully",
-      team: {
-        id: team._id,
-        name: team.name,
-        members: team.members,
-        score: team.score
-      }
-    });
+    res.json({ message: "Joined successfully" });
 
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-/* ================= ANSWER QUESTION ================= */
+/* ================= ANSWER ================= */
 
 app.post("/api/answer", async (req, res) => {
   try {
+    const control = await Control.findOne();
+    if (!control || !control.showChallenges) {
+      return res.status(403).json({
+        message: "Challenges are closed"
+      });
+    }
+
     const { teamName, questionId, answer } = req.body;
 
     const team = await Team.findOne({ name: teamName });
     const question = await Question.findById(questionId);
 
-    if (!team || !question) {
-      return res.status(404).json({ message: "Team or question not found" });
-    }
+    if (!team || !question)
+      return res.status(404).json({ message: "Not found" });
 
-    if (team.solvedChallenges.includes(question._id)) {
+    if (team.solvedChallenges.includes(question._id))
       return res.status(400).json({ message: "Already solved" });
-    }
 
     if (question.correctAnswer === answer) {
       team.score += question.points;
       team.solvedChallenges.push(question._id);
       await team.save();
 
-      return res.json({
-        correct: true,
-        newScore: team.score
-      });
-    } else {
-      return res.json({
-        correct: false,
-        message: "Wrong answer"
-      });
+      return res.json({ correct: true, score: team.score });
     }
 
+    res.json({ correct: false });
+
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -179,11 +150,34 @@ app.post("/api/answer", async (req, res) => {
 
 app.get("/api/leaderboard", async (req, res) => {
   try {
+    const control = await Control.findOne();
+
+    if (!control || !control.showRanking) {
+      return res.status(403).json({
+        message: "Leaderboard is not available yet"
+      });
+    }
+
     const teams = await Team.find().sort({ score: -1 });
     res.json(teams);
+
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
+});
+
+/* ================= ADMIN CONTROL ================= */
+
+app.post("/api/admin/toggle", async (req, res) => {
+  const { showChallenges, showRanking } = req.body;
+
+  await Control.updateOne(
+    {},
+    { showChallenges, showRanking },
+    { upsert: true }
+  );
+
+  res.json({ message: "Control updated" });
 });
 
 /* ================= SERVER ================= */
