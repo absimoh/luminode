@@ -11,10 +11,12 @@ const Control = require("./models/Control");
 
 const app = express();
 
+/* ================= MIDDLEWARE ================= */
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+/* ================= DATABASE ================= */
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
@@ -24,26 +26,39 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-/* ================= GET TEAMS ================= */
+/* ================= GET ALL TEAMS ================= */
 app.get("/api/teams", async (req, res) => {
-  const teams = await Team.find().select("name score");
-  res.json(teams);
+  try {
+    const teams = await Team.find().select("name score");
+    res.json(teams);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching teams" });
+  }
 });
 
 /* ================= JOIN TEAM ================= */
 app.post("/api/team/join", async (req, res) => {
-  const { name, password, memberName } = req.body;
+  try {
+    const { name, password, memberName } = req.body;
 
-  const team = await Team.findOne({ name });
-  if (!team) return res.status(404).json({ message: "Team not found" });
+    const team = await Team.findOne({ name });
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
 
-  const match = await bcrypt.compare(password, team.password);
-  if (!match) return res.status(400).json({ message: "Wrong password" });
+    const match = await bcrypt.compare(password, team.password);
+    if (!match) {
+      return res.status(400).json({ message: "Wrong password" });
+    }
 
-  team.members.push({ name: memberName });
-  await team.save();
+    team.members.push({ name: memberName });
+    await team.save();
 
-  res.json({ message: "Joined successfully" });
+    res.json({ message: "Joined successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error joining team" });
+  }
 });
 
 /* ================= GET CATEGORIES ================= */
@@ -79,34 +94,58 @@ app.get("/api/questions/:category", async (req, res) => {
 
 /* ================= LEADERBOARD ================= */
 app.get("/api/leaderboard", async (req, res) => {
-  const control = await Control.findOne();
-  if (!control || !control.leaderboardOpen)
-    return res.json({ message: "Leaderboard closed" });
+  try {
+    const control = await Control.findOne();
 
-  const teams = await Team.find().sort({ score: -1 });
-  res.json(teams);
+    if (!control || !control.leaderboardOpen) {
+      return res.status(403).json({ message: "Leaderboard closed" });
+    }
+
+    const teams = await Team.find().sort({ score: -1 });
+    res.json(teams);
+
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching leaderboard" });
+  }
 });
 
-/* ================= CONTROL ================= */
+/* ================= CONTROL STATUS ================= */
 app.get("/api/control", async (req, res) => {
-  let control = await Control.findOne();
-  if (!control) control = await Control.create({});
-  res.json(control);
+  try {
+    let control = await Control.findOne();
+    if (!control) {
+      control = await Control.create({});
+    }
+    res.json(control);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching control" });
+  }
 });
 
+/* ================= UPDATE CONTROL ================= */
 app.post("/api/control", async (req, res) => {
-  const { challengesOpen, leaderboardOpen } = req.body;
+  try {
+    const { challengesOpen, leaderboardOpen } = req.body;
 
-  let control = await Control.findOne();
-  if (!control) control = await Control.create({});
+    let control = await Control.findOne();
+    if (!control) {
+      control = await Control.create({});
+    }
 
-  control.challengesOpen = challengesOpen;
-  control.leaderboardOpen = leaderboardOpen;
-  await control.save();
+    control.challengesOpen = challengesOpen;
+    control.leaderboardOpen = leaderboardOpen;
 
-  res.json({ message: "Updated" });
+    await control.save();
+
+    res.json({ message: "Control updated" });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error updating control" });
+  }
 });
 
+/* ================= START SERVER ================= */
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log("Server running on port " + PORT));
-
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
