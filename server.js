@@ -8,6 +8,7 @@ const path = require("path");
 const Team = require("./models/Team");
 const Question = require("./models/Question");
 const Control = require("./models/Control");
+const Ticket = require("./models/Ticket");
 
 const app = express();
 
@@ -58,6 +59,24 @@ app.post("/api/team/join", async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ message: "Error joining team" });
+  }
+});
+
+/* ================= CREATE TICKET ================= */
+app.post("/api/ticket", async (req, res) => {
+  try {
+    const { teamName, message } = req.body;
+
+    await Ticket.create({
+      teamName,
+      message
+    });
+
+    res.json({ message: "Ticket sent" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -144,6 +163,40 @@ app.post("/api/control", async (req, res) => {
   }
 });
 
+/* ================= SUBMIT ANSWER ================= */
+app.post("/api/submit", async (req, res) => {
+  try {
+    const { teamName, questionId, answer } = req.body;
+
+    const team = await Team.findOne({ name: teamName });
+    if (!team) return res.status(404).json({ message: "Team not found" });
+
+    const question = await Question.findById(questionId);
+    if (!question) return res.status(404).json({ message: "Question not found" });
+
+    // منع إعادة حل السؤال
+    if (team.answeredQuestions && team.answeredQuestions.includes(questionId)) {
+      return res.json({ correct: false, message: "Already answered" });
+    }
+
+    const correct = question.correctAnswer === answer;
+
+    if (correct) {
+      team.score += question.points || 1;
+    }
+
+    if (!team.answeredQuestions) team.answeredQuestions = [];
+    team.answeredQuestions.push(questionId);
+
+    await team.save();
+
+    res.json({ correct });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 /* ================= START SERVER ================= */
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
