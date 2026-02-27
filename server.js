@@ -81,7 +81,7 @@ app.get("/api/questions/:category", async (req, res) => {
     }
 
     const questions = await Question.find({
-      category: req.params.category,
+      category: { $regex: new RegExp("^" + req.params.category + "$", "i") },
       isActive: true
     }).select("-correctAnswer");
 
