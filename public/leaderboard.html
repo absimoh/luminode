@@ -1,57 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Leaderboard</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<title>Leaderboard</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <div class="navbar">
   <div class="nav-left">
-    <img src="/logo.png" class="logo">
-    <img src="/org.png" class="org-logo">
+    <img src="/org.png">
+    <img src="/logo.png">
   </div>
 
   <div class="nav-links">
     <a href="/dashboard.html">Home</a>
+    <a href="/leaderboard.html">Leaderboard</a>
   </div>
 </div>
 
-<div class="main-container">
-  <h1>Leaderboard</h1>
+<div class="container">
+
+  <h1>🏆 Leaderboard</h1>
+
   <div id="leaderboardContainer"></div>
+
 </div>
 
-<footer>
-  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
-</footer>
+<div class="footer">
+  © 2026 Abbas Mohammed Al-Mukhtafi. All Rights Reserved.
+</div>
 
 <script>
-async function loadLeaderboard() {
+
+async function loadLeaderboard(){
+
   const res = await fetch("/api/leaderboard");
-  const data = await res.json();
+
+  if(res.status === 403){
+    document.getElementById("leaderboardContainer").innerHTML =
+      "<p>Leaderboard is currently closed.</p>";
+    return;
+  }
+
+  const teams = await res.json();
 
   const container = document.getElementById("leaderboardContainer");
   container.innerHTML = "";
 
-  if (data.message) {
-    container.innerHTML = `<p>${data.message}</p>`;
-    return;
-  }
+  teams.forEach((team, index) => {
 
-  data.forEach((team, index) => {
-    const div = document.createElement("div");
-    div.className = "leaderboard-card";
-    div.innerHTML = `
-      <span>${index + 1}. ${team.name}</span>
+    const row = document.createElement("div");
+    row.className = "leaderboard-row";
+
+    row.innerHTML = `
+      <span>#${index + 1}</span>
+      <span>${team.name}</span>
       <span>${team.score} pts</span>
     `;
-    container.appendChild(div);
+
+    container.appendChild(row);
   });
 }
 
 loadLeaderboard();
+setInterval(loadLeaderboard, 5000);
+
 </script>
 
 </body>

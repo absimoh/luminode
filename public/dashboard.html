@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Team Dashboard - Luminode</title>
+<title>Team Dashboard</title>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<!-- ================= NAVBAR ================= -->
 <div class="navbar">
   <div class="nav-left">
     <img src="/org.png">
@@ -20,56 +19,81 @@
   </div>
 </div>
 
-<!-- ================= CONTENT ================= -->
 <div class="container">
 
-  <h1>Team Dashboard</h1>
-
-  <button class="help-btn" onclick="requestHelp()">Request Help</button>
-
-  <!-- ================= CATEGORY BUTTONS ================= -->
-  <div class="category-grid">
-    <button onclick="loadCategory('AI')">AI</button>
-    <button onclick="loadCategory('Galaxies')">Galaxies</button>
-    <button onclick="loadCategory('Universe')">Universe</button>
-    <button onclick="loadCategory('Stars')">Stars</button>
-    <button onclick="loadCategory('Moons')">Moons</button>
-    <button onclick="loadCategory('Planets')">Planets</button>
+  <div class="team-box">
+    Team: <span id="teamNameDisplay"></span> |
+    Score: <span id="teamScore">0</span>
   </div>
 
-  <!-- ================= QUESTIONS AREA ================= -->
+  <button class="help-btn" onclick="openHelpModal()">
+    🚨 Request Help
+  </button>
+
+  <div id="categories" class="category-grid"></div>
+
   <div id="questionsContainer"></div>
 
 </div>
 
-<!-- ================= FOOTER ================= -->
 <div class="footer">
   © 2026 Abbas Mohammed Al-Mukhtafi. All Rights Reserved.
+</div>
+
+<!-- ===== HELP MODAL ===== -->
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <h2>Request Help</h2>
+    <textarea id="helpMessage" placeholder="Describe your issue..." style="width:100%;padding:10px;border-radius:8px;"></textarea>
+    <button onclick="sendHelp()">Send</button>
+    <button onclick="closeHelpModal()" class="close-btn">Cancel</button>
+  </div>
 </div>
 
 <script>
 
 const teamName = localStorage.getItem("teamName");
+if (!teamName) window.location.href = "/";
 
-if(!teamName){
-  window.location.href = "/";
+document.getElementById("teamNameDisplay").innerText = teamName;
+
+async function loadScore(){
+  const res = await fetch("/api/teams");
+  const teams = await res.json();
+  const team = teams.find(t => t.name === teamName);
+  if(team){
+    document.getElementById("teamScore").innerText = team.score;
+  }
 }
 
-async function loadCategory(category){
+async function loadCategories(){
+  const res = await fetch("/api/categories");
+  const categories = await res.json();
 
+  const container = document.getElementById("categories");
+  container.innerHTML = "";
+
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.innerText = cat;
+    btn.onclick = () => loadQuestions(cat);
+    container.appendChild(btn);
+  });
+}
+
+async function loadQuestions(category){
   const res = await fetch(`/api/questions/${category}`);
   const data = await res.json();
 
   const container = document.getElementById("questionsContainer");
   container.innerHTML = "";
 
-  if(data.length === 0){
-    container.innerHTML = "<p style='text-align:center;'>No questions available</p>";
+  if(data.message){
+    container.innerHTML = `<p>${data.message}</p>`;
     return;
   }
 
   data.forEach(q => {
-
     const card = document.createElement("div");
     card.className = "question-card";
 
@@ -77,7 +101,8 @@ async function loadCategory(category){
       <h3>${q.question}</h3>
       <div class="options-grid">
         ${q.options.map(opt =>
-          `<button class="option-btn" onclick="submitAnswer('${q._id}','${opt}',this)">
+          `<button class="option-btn"
+            onclick="submitAnswer('${q._id}','${opt}',this)">
             ${opt}
           </button>`
         ).join("")}
@@ -102,20 +127,28 @@ async function submitAnswer(questionId, answer, btn){
 
   const data = await res.json();
 
+  btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
+
   if(data.correct){
     btn.style.background = "green";
+    await loadScore();
   }else{
     btn.style.background = "red";
   }
-
-  btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
 }
 
-async function requestHelp(){
+/* ===== HELP SYSTEM ===== */
 
-  const message = prompt("Describe your issue:");
+function openHelpModal(){
+  document.getElementById("helpModal").style.display = "flex";
+}
 
-  if(!message) return;
+function closeHelpModal(){
+  document.getElementById("helpModal").style.display = "none";
+}
+
+async function sendHelp(){
+  const message = document.getElementById("helpMessage").value;
 
   await fetch("/api/ticket",{
     method:"POST",
@@ -127,7 +160,11 @@ async function requestHelp(){
   });
 
   alert("Help request sent to admin");
+  closeHelpModal();
 }
+
+loadScore();
+loadCategories();
 
 </script>
 

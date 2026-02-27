@@ -1,47 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <div class="navbar">
   <div class="nav-left">
-    <img src="/logo.png" class="logo">
-    <img src="/org.png" class="org-logo">
+    <img src="/org.png">
+    <img src="/logo.png">
   </div>
 </div>
 
-<div class="main-container">
-  <h1>Admin Control Panel</h1>
+<div class="container">
 
-  <div class="admin-buttons">
-    <button class="btn" onclick="updateControl(true,false)">Open Challenges</button>
-    <button class="btn" onclick="updateControl(false,false)">Close Challenges</button>
-    <button class="btn" onclick="updateControl(false,true)">Open Leaderboard</button>
-    <button class="btn" onclick="updateControl(false,false)">Close Leaderboard</button>
+  <h1>⚙ Admin Control Panel</h1>
+
+  <div class="admin-controls">
+    <button onclick="toggleChallenges()">Toggle Challenges</button>
+    <button onclick="toggleLeaderboard()">Toggle Leaderboard</button>
   </div>
+
+  <h2 style="margin-top:40px;">📩 Support Tickets</h2>
+  <div id="ticketsContainer"></div>
+
 </div>
 
-<footer>
-  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
-</footer>
+<div class="footer">
+  © 2026 Abbas Mohammed Al-Mukhtafi. All Rights Reserved.
+</div>
 
 <script>
-async function updateControl(challenges, leaderboard) {
-  await fetch("/api/control", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+
+let controlState = {};
+
+async function loadControl(){
+  const res = await fetch("/api/control");
+  controlState = await res.json();
+}
+
+async function toggleChallenges(){
+  await fetch("/api/control",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
-      challengesOpen: challenges,
-      leaderboardOpen: leaderboard
+      challengesOpen: !controlState.challengesOpen,
+      leaderboardOpen: controlState.leaderboardOpen
     })
   });
-
-  alert("Updated successfully");
+  loadControl();
+  alert("Challenges updated");
 }
+
+async function toggleLeaderboard(){
+  await fetch("/api/control",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      challengesOpen: controlState.challengesOpen,
+      leaderboardOpen: !controlState.leaderboardOpen
+    })
+  });
+  loadControl();
+  alert("Leaderboard updated");
+}
+
+async function loadTickets(){
+  const res = await fetch("/api/tickets");
+  const tickets = await res.json();
+
+  const container = document.getElementById("ticketsContainer");
+  container.innerHTML = "";
+
+  tickets.forEach(ticket => {
+
+    const card = document.createElement("div");
+    card.className = "ticket-card";
+
+    card.innerHTML = `
+      <strong>Team:</strong> ${ticket.teamName}<br>
+      <strong>Message:</strong> ${ticket.message}<br>
+      <strong>Status:</strong> ${ticket.status}<br>
+      <button onclick="closeTicket('${ticket._id}')">Close</button>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+async function closeTicket(id){
+  await fetch(`/api/tickets/${id}`,{
+    method:"PUT"
+  });
+  loadTickets();
+}
+
+loadControl();
+loadTickets();
+setInterval(loadTickets, 5000);
+
 </script>
 
 </body>

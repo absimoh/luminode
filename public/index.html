@@ -1,35 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Luminode</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<title>Luminode Competition</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <div class="navbar">
   <div class="nav-left">
-    <img src="/logo.png" class="logo">
-    <img src="/org.png" class="org-logo">
-  </div>
-
-  <div class="nav-links">
-    <a href="/dashboard.html">Home</a>
-    <a href="/leaderboard.html">Leaderboard</a>
+    <img src="/org.png">
+    <img src="/logo.png">
   </div>
 </div>
 
-<div class="main-container">
-  <h1>Luminode</h1>
-  <div class="subtitle">AI & Space Competition</div>
+<div class="container">
 
-  <div class="teams-grid" id="teamsContainer"></div>
+  <h1>Select Your Team</h1>
+  <p class="subtitle">Choose your team to enter the competition</p>
+
+  <div id="teamsGrid" class="teams-grid"></div>
+
 </div>
 
-<footer>
-  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
-</footer>
+<div class="footer">
+  © 2026 Abbas Mohammed Al-Mukhtafi. All Rights Reserved.
+</div>
 
-<script src="/js/app.js"></script>
+<!-- ===== LOGIN MODAL ===== -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <h2 id="selectedTeamTitle"></h2>
+
+    <input type="text" id="memberName" placeholder="Your Name">
+    <input type="password" id="teamPassword" placeholder="Team Password">
+
+    <button onclick="joinTeam()">Enter</button>
+    <button onclick="closeModal()" class="close-btn">Cancel</button>
+  </div>
+</div>
+
+<script>
+
+let selectedTeam = null;
+
+async function loadTeams() {
+  const res = await fetch("/api/teams");
+  const teams = await res.json();
+
+  const grid = document.getElementById("teamsGrid");
+  grid.innerHTML = "";
+
+  teams.forEach(team => {
+    const card = document.createElement("div");
+    card.className = "team-card";
+    card.innerHTML = `<h3>${team.name}</h3>`;
+    card.onclick = () => openModal(team.name);
+    grid.appendChild(card);
+  });
+}
+
+function openModal(teamName) {
+  selectedTeam = teamName;
+  document.getElementById("selectedTeamTitle").innerText = teamName;
+  document.getElementById("loginModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("loginModal").style.display = "none";
+}
+
+async function joinTeam() {
+
+  const memberName = document.getElementById("memberName").value;
+  const password = document.getElementById("teamPassword").value;
+
+  const res = await fetch("/api/team/join", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: selectedTeam,
+      password,
+      memberName
+    })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    localStorage.setItem("teamName", selectedTeam);
+    window.location.href = "/dashboard.html";
+  } else {
+    alert(data.message);
+  }
+}
+
+loadTeams();
+
+</script>
+
 </body>
 </html>
