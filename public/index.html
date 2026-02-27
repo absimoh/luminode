@@ -8,25 +8,34 @@
 
 <div class="overlay">
 
+  <!-- NAVBAR -->
   <div class="navbar">
     <div class="logo-group">
-      <img src="org.png" class="logo small">
       <img src="logo.png" class="logo">
+      <img src="org.png" class="logo small">
     </div>
   </div>
 
-  <div class="container">
-    <div class="card">
-      <h1>Luminode</h1>
-      <p>AI & Space Competition</p>
+  <!-- CENTER CONTENT -->
+  <div class="main-center">
+    <h1>Luminode</h1>
+    <p>AI & Space Competition</p>
 
-      <select id="teamSelect"></select>
-      <input id="password" type="password" placeholder="Password">
+    <div id="teamsGrid" class="teams-grid"></div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <h3 id="selectedTeamName"></h3>
       <input id="memberName" placeholder="Your Name">
+      <input id="password" type="password" placeholder="Password">
       <button onclick="join()">Join Team</button>
+      <button class="close-btn" onclick="closeModal()">Cancel</button>
     </div>
   </div>
 
+  <!-- FOOTER -->
   <footer>
     © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
   </footer>
