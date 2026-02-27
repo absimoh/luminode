@@ -36,29 +36,31 @@ body {
   max-width: 1200px;
   margin: auto;
   text-align: center;
-  padding: 0 80px;
+  padding: 0 60px;
 }
 
 .teams-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  justify-content: center;
   gap: 30px;
-  margin-top: 50px;
+  margin-top: 60px;
+  flex-wrap: wrap;
 }
 
 .team-card {
-  background: rgba(15,23,42,0.9);
-  padding: 35px 20px;
+  width: 220px;
+  padding: 30px 20px;
   border-radius: 20px;
+  background: rgba(15,23,42,0.9);
+  box-shadow: 0 0 25px rgba(0,195,255,0.4);
   cursor: pointer;
   transition: 0.3s;
-  box-shadow: 0 0 25px rgba(0,195,255,0.4);
-  font-size: 18px;
+  text-align: center;
 }
 
 .team-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(0,195,255,0.6);
+  transform: translateY(-5px);
+  box-shadow: 0 0 40px rgba(0,195,255,0.7);
 }
 
 .modal {
