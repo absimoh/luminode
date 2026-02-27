@@ -24,11 +24,11 @@ body {
 }
 
 .logo {
-  height: 75px;
+  height: 50px;
 }
 
 .logo.small {
-  height: 85px;
+  height: 65px;
 }
 
 .main-center {
