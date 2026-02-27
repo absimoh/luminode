@@ -1,76 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Team Dashboard</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<title>Team Dashboard - Luminode</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
+<!-- ================= NAVBAR ================= -->
 <div class="navbar">
   <div class="nav-left">
-    <img src="/logo.png" class="logo">
-    <img src="/org.png" class="org-logo">
+    <img src="/org.png">
+    <img src="/logo.png">
   </div>
 
   <div class="nav-links">
-    <a href="/">Home</a>
+    <a href="/dashboard.html">Home</a>
     <a href="/leaderboard.html">Leaderboard</a>
   </div>
 </div>
 
-<div class="main-container">
+<!-- ================= CONTENT ================= -->
+<div class="container">
 
   <h1>Team Dashboard</h1>
 
-  <div id="teamInfo"></div>
+  <button class="help-btn" onclick="requestHelp()">Request Help</button>
 
-  <button class="btn full-width" onclick="requestHelp()">
-    Request Help
-  </button>
+  <!-- ================= CATEGORY BUTTONS ================= -->
+  <div class="category-grid">
+    <button onclick="loadCategory('AI')">AI</button>
+    <button onclick="loadCategory('Galaxies')">Galaxies</button>
+    <button onclick="loadCategory('Universe')">Universe</button>
+    <button onclick="loadCategory('Stars')">Stars</button>
+    <button onclick="loadCategory('Moons')">Moons</button>
+    <button onclick="loadCategory('Planets')">Planets</button>
+  </div>
 
-  <h2>Challenges</h2>
+  <!-- ================= QUESTIONS AREA ================= -->
   <div id="questionsContainer"></div>
 
 </div>
 
-<footer>
-  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
-</footer>
+<!-- ================= FOOTER ================= -->
+<div class="footer">
+  © 2026 Abbas Mohammed Al-Mukhtafi. All Rights Reserved.
+</div>
 
 <script>
-async function loadQuestions() {
-  const res = await fetch("/api/questions");
+
+const teamName = localStorage.getItem("teamName");
+
+if(!teamName){
+  window.location.href = "/";
+}
+
+async function loadCategory(category){
+
+  const res = await fetch(`/api/questions/${category}`);
   const data = await res.json();
 
   const container = document.getElementById("questionsContainer");
   container.innerHTML = "";
 
-  if (data.message) {
-    container.innerHTML = `<p>${data.message}</p>`;
+  if(data.length === 0){
+    container.innerHTML = "<p style='text-align:center;'>No questions available</p>";
     return;
   }
 
   data.forEach(q => {
-    const div = document.createElement("div");
-    div.className = "question-card";
 
-    div.innerHTML = `
+    const card = document.createElement("div");
+    card.className = "question-card";
+
+    card.innerHTML = `
       <h3>${q.question}</h3>
-      ${q.options.map(opt => `
-        <button class="option-btn">${opt}</button>
-      `).join("")}
+      <div class="options-grid">
+        ${q.options.map(opt =>
+          `<button class="option-btn" onclick="submitAnswer('${q._id}','${opt}',this)">
+            ${opt}
+          </button>`
+        ).join("")}
+      </div>
     `;
 
-    container.appendChild(div);
+    container.appendChild(card);
   });
 }
 
-function requestHelp() {
-  alert("Help request sent to admin.");
+async function submitAnswer(questionId, answer, btn){
+
+  const res = await fetch("/api/submit",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      teamName,
+      questionId,
+      answer
+    })
+  });
+
+  const data = await res.json();
+
+  if(data.correct){
+    btn.style.background = "green";
+  }else{
+    btn.style.background = "red";
+  }
+
+  btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
 }
 
-loadQuestions();
+async function requestHelp(){
+
+  const message = prompt("Describe your issue:");
+
+  if(!message) return;
+
+  await fetch("/api/ticket",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      teamName,
+      message
+    })
+  });
+
+  alert("Help request sent to admin");
+}
+
 </script>
 
 </body>
