@@ -44,7 +44,33 @@ app.post("/api/team/join", async (req, res) => {
 
   res.json({ message: "Joined successfully" });
 });
+/* ================= CREATE TEAM (TEMP) ================= */
 
+app.post("/api/team/create", async (req, res) => {
+  try {
+    const { name, password } = req.body;
+
+    const existing = await Team.findOne({ name });
+    if (existing) {
+      return res.status(400).json({ message: "Team already exists" });
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    const team = new Team({
+      name,
+      password: hashed,
+      members: [],
+      score: 0
+    });
+
+    await team.save();
+    res.json({ message: "Team created successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error creating team" });
+  }
+});
 /* ================= QUESTIONS ================= */
 
 app.get("/api/questions", async (req, res) => {
@@ -113,3 +139,6 @@ app.post("/api/admin/toggle", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Server running"));
+
+
+
