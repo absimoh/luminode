@@ -314,3 +314,20 @@ body {
   font-weight: 600;
   box-shadow: 0 0 15px rgba(120,100,255,0.5);
 }
+
+.pagination {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(45deg,#2563eb,#8b5cf6);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
