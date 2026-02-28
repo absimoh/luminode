@@ -21,17 +21,21 @@
 
 <div class="container">
 
-  <div class="team-box">
-    Team: <span id="teamNameDisplay"></span> |
-    Score: <span id="teamScore">0</span>
+  <div class="team-info">
+  <div class="team-name">
+    🛰 Team: <span id="teamNameDisplay"></span>
   </div>
+  <div class="team-score">
+    ⭐ Score: <span id="teamScore">0</span>
+  </div>
+</div>
 
   <button class="help-btn" onclick="openHelpModal()">
     🚨 Request Help
   </button>
 
   <div id="categories" class="category-grid"></div>
-
+  <div id="questionCounter" class="question-counter"></div>
   <div id="questionsContainer"></div>
 
 </div>
@@ -84,7 +88,7 @@ async function loadCategories(){
 async function loadQuestions(category){
   const res = await fetch(`/api/questions/${category}`);
   const data = await res.json();
-
+  
   const container = document.getElementById("questionsContainer");
   container.innerHTML = "";
 
@@ -92,6 +96,9 @@ async function loadQuestions(category){
     container.innerHTML = `<p>${data.message}</p>`;
     return;
   }
+
+  document.getElementById("questionCounter").innerText =
+  `Questions: ${data.length}`;
 
   data.forEach(q => {
     const card = document.createElement("div");

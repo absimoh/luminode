@@ -286,3 +286,31 @@ body {
   max-width: 700px;
   box-shadow: 0 0 20px rgba(120,100,255,0.4);
 }
+
+.team-info {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.team-name,
+.team-score {
+  background: rgba(15,25,60,0.9);
+  padding: 12px 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(120,100,255,0.5);
+}
+
+.question-counter {
+  position: fixed;
+  right: 40px;
+  top: 200px;
+  background: rgba(15,25,60,0.95);
+  padding: 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(120,100,255,0.5);
+}
