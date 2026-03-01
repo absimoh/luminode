@@ -26,12 +26,14 @@ const teamSchema = new mongoose.Schema({
       }
     }
   ],
+  
+  answers: [
+    {
+      questionId: String,
+      correct: Boolean
+    }
+  ]
 
-  // تخزين الأسئلة التي تم حلها
-  answeredQuestions: {
-    type: [String],
-    default: []
-  }
 
 }, { timestamps: true });
 

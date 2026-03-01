@@ -41,7 +41,7 @@
 </div>
 
 <div class="footer">
-  © 2026 Abbas Mohammed Al-Mukhtafi. All Rights Reserved.
+  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
 </div>
 
 <!-- ===== HELP MODAL ===== -->
@@ -87,12 +87,24 @@ async function loadCategories(){
 
 let currentQuestions = [];
 let currentIndex = 0;
+let answeredStatus = {};
 
 async function loadQuestions(category){
 
   const res = await fetch(`/api/questions/${category}`);
   const data = await res.json();
 
+  // نجيب بيانات الفريق
+  const teamRes = await fetch(`/api/team/${teamName}`);
+  const teamData = await teamRes.json();
+
+  // نخزن حالة الإجابات
+  answeredStatus = {};
+
+  teamData.answers.forEach(a => {
+    answeredStatus[a.questionId] = a.correct;
+  });
+  
   if(data.message){
     document.getElementById("questionsContainer").innerHTML =
       `<p>${data.message}</p>`;
@@ -123,17 +135,35 @@ function renderQuestion(){
   const card = document.createElement("div");
   card.className = "question-card";
 
+  // نشوف إذا السؤال هذا مجاوب قبل
+  const answered = answeredStatus[q._id];
+
   card.innerHTML = `
     <h3>Question ${currentIndex + 1}</h3>
     <p style="margin-bottom:20px;">${q.question}</p>
 
     <div class="options-grid">
-      ${q.options.map(opt =>
-        `<button class="option-btn"
-          onclick="submitAnswer('${q._id}','${opt}',this)">
-          ${opt}
-        </button>`
-      ).join("")}
+      ${q.options.map(opt => {
+
+        let disabled = answered !== undefined ? "disabled" : "";
+        let style = "";
+
+        if(answered !== undefined){
+          if(answered && opt === q.correctAnswer)
+            style = "background:green";
+          else if(!answered && opt === q.correctAnswer)
+            style = "background:green";
+        }
+
+        return `
+          <button class="option-btn"
+            ${disabled}
+            style="${style}"
+            onclick="submitAnswer('${q._id}','${opt}',this)">
+            ${opt}
+          </button>
+        `;
+      }).join("")}
     </div>
 
     <div class="pagination">

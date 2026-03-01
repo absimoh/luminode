@@ -71,27 +71,38 @@ app.get("/api/questions/:category", async (req, res) => {
 
 /* ================= SUBMIT ANSWER ================= */
 app.post("/api/submit", async (req, res) => {
+
   const { teamName, questionId, answer } = req.body;
 
   const team = await Team.findOne({ name: teamName });
-  if (!team) return res.status(404).json({ message: "Team not found" });
-
   const question = await Question.findById(questionId);
-  if (!question) return res.status(404).json({ message: "Question not found" });
 
-  if (team.answeredQuestions.includes(questionId))
-    return res.json({ correct: false, message: "Already answered" });
+  if (!team || !question) {
+    return res.status(400).json({ message: "Error" });
+  }
+
+  // نشوف إذا جاوب السؤال قبل
+  const alreadyAnswered = team.answers.find(a => a.questionId === questionId);
+
+  if (alreadyAnswered) {
+    return res.json({ correct: alreadyAnswered.correct });
+  }
 
   const correct = question.correctAnswer === answer;
 
   if (correct) {
-    team.score += question.points || 1;
+    team.score += question.points;
   }
 
-  team.answeredQuestions.push(questionId);
+  team.answers.push({
+    questionId,
+    correct
+  });
+
   await team.save();
 
   res.json({ correct });
+
 });
 
 /* ================= LEADERBOARD ================= */
@@ -148,6 +159,19 @@ app.put("/api/tickets/:id", async (req, res) => {
     status: "closed"
   });
   res.json({ message: "Ticket closed" });
+});
+
+/* ================= GET TEAM DATA ================= */
+app.get("/api/team/:name", async (req, res) => {
+
+  const team = await Team.findOne({ name: req.params.name });
+
+  if (!team) {
+    return res.status(404).json({ message: "Team not found" });
+  }
+
+  res.json(team);
+
 });
 
 /* ================= START SERVER ================= */
