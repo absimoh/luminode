@@ -176,16 +176,21 @@ function renderQuestion(){
     <p style="margin-bottom:20px;">${q.question}</p>
 
     <div class="options-grid">
-      ${q.options.map(opt => {
+      ${q.options.map(opt =>{
 
         let disabled = answered !== undefined ? "disabled" : "";
         let color = "";
-
         if(answered !== undefined){
+          // الإجابة الصحيحة
           if(opt === q.correctAnswer){
-            color = "background: green";
+            color = "background:#22c55e";
           }
-        }
+          // الإجابة التي اختارها الفريق وكانت خطأ
+          if(!answered && opt !== q.correctAnswer){
+            if(opt === answeredStatus[q._id + "_selected"]){
+              color = "background:#ef4444";
+            }
+          }
 
         return `
           <button class="option-btn"
@@ -196,6 +201,7 @@ function renderQuestion(){
           </button>
         `;
 
+        }
       }).join("")}
     </div>
 
@@ -238,10 +244,11 @@ async function submitAnswer(questionId, answer, btn){
 
   const data = await res.json();
   answeredStatus[questionId] = data.correct;
+  answeredStatus[questionId + "_selected"] = answer;
   renderNumbers();
-  
-  btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
 
+  btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
+  
   if(data.correct){
     btn.style.background = "green";
     await loadScore();
