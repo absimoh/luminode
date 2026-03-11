@@ -237,7 +237,9 @@ async function submitAnswer(questionId, answer, btn){
   });
 
   const data = await res.json();
-
+  answeredStatus[questionId] = data.correct;
+  renderNumbers();
+  
   btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
 
   if(data.correct){

@@ -75,17 +75,21 @@ app.post("/api/submit", async (req, res) => {
   const { teamName, questionId, answer } = req.body;
 
   const team = await Team.findOne({ name: teamName });
+  // منع حل السؤال مرتين
+  const alreadyAnswered = team.answers.find(
+    a => a.questionId === questionId
+  );
+
+  if(alreadyAnswered){
+    return res.json({
+      message: "Already answered",
+      correct: alreadyAnswered.correct
+    });
+  }
   const question = await Question.findById(questionId);
 
   if (!team || !question) {
     return res.status(400).json({ message: "Error" });
-  }
-
-  // نشوف إذا جاوب السؤال قبل
-  const alreadyAnswered = team.answers.find(a => a.questionId === questionId);
-
-  if (alreadyAnswered) {
-    return res.json({ correct: alreadyAnswered.correct });
   }
 
   const correct = question.correctAnswer === answer;
