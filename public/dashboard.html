@@ -35,8 +35,13 @@
   </button>
 
   <div id="categories" class="category-grid"></div>
-  <div id="questionCounter" class="question-counter"></div>
-  <div id="questionsContainer"></div>
+  <div class="questions-layout">
+
+    <div id="questionsContainer"></div>
+
+    <div id="questionNumbers" class="question-numbers"></div>
+
+  </div>
 
 </div>
 
@@ -68,6 +73,35 @@ async function loadScore(){
   if(team){
     document.getElementById("teamScore").innerText = team.score;
   }
+}
+
+function renderNumbers(){
+
+  const container = document.getElementById("questionNumbers");
+  container.innerHTML = "";
+
+  currentQuestions.forEach((q,i)=>{
+
+    const btn = document.createElement("button");
+    btn.innerText = i + 1;
+
+    if(answeredStatus[q._id] === true){
+      btn.style.background = "#22c55e"; // صح
+    }
+
+    if(answeredStatus[q._id] === false){
+      btn.style.background = "#ef4444"; // خطأ
+    }
+
+    btn.onclick = ()=>{
+      currentIndex = i;
+      renderQuestion();
+    };
+
+    container.appendChild(btn);
+
+  });
+
 }
 
 async function loadCategories(){
@@ -114,10 +148,8 @@ async function loadQuestions(category){
   currentQuestions = data;
   currentIndex = 0;
 
-  document.getElementById("questionCounter").innerText =
-    `Questions: ${data.length}`;
-
   renderQuestion();
+  renderNumbers();
 }
 
 function renderQuestion(){
@@ -148,15 +180,9 @@ function renderQuestion(){
         let color = "";
 
         if(answered !== undefined){
-
           if(opt === q.correctAnswer){
             color = "background: green";
           }
-
-          if(!answered && opt === q.correctAnswer){
-            color = "background: green";
-          }
-
         }
 
         return `
@@ -171,31 +197,11 @@ function renderQuestion(){
       }).join("")}
     </div>
 
-  <div class="pagination">
-
-    <button onclick="prevQuestion()">⬅</button>
-
-    <div class="numbers">
-      ${currentQuestions.map((q,index)=>{
-
-        let cls = "";
-
-        if(answeredStatus[q._id] === true) cls = "correct";
-        if(answeredStatus[q._id] === false) cls = "wrong";
-
-        return `
-          <button class="page-number ${cls}"
-            onclick="goToQuestion(${index})">
-            ${index+1}
-          </button>
-        `;
-
-      }).join("")}
-  </div>
-
-  <button onclick="nextQuestion()">➡</button>
-
-</div>`;
+    <div class="pagination">
+      <button onclick="prevQuestion()">⬅ Prev</button>
+      <button onclick="nextQuestion()">Next ➡</button>
+    </div>
+  `;
 
   container.appendChild(card);
 }

@@ -332,32 +332,26 @@ body {
   font-weight: 600;
 }
 
-.pagination{
-  margin-top:25px;
+.questions-layout{
   display:flex;
   justify-content:center;
-  align-items:center;
-  gap:10px;
+  gap:40px;
 }
 
-.numbers{
-  display:flex;
-  gap:6px;
+.question-numbers{
+  width:250px;
+  max-height:500px;
+  overflow-y:auto;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
 }
 
-.page-number{
-  padding:6px 10px;
+.question-numbers button{
+  padding:8px;
   border:none;
   border-radius:6px;
-  background:#2b2b4f;
+  background:#6366f1;
   color:white;
   cursor:pointer;
-}
-
-.page-number.correct{
-  background:#16a34a;
-}
-
-.page-number.wrong{
-  background:#dc2626;
 }
