@@ -35,14 +35,8 @@
   </button>
 
   <div id="categories" class="category-grid"></div>
-  <div class="questions-layout">
-
-    <div id="questionsContainer"></div>
-
-    <div id="questionNumbers" class="question-numbers"></div>
-
-  </div>
-
+  <div id="questionNumbers" class="question-numbers-top"></div>
+  <div id="questionsContainer"></div>
 </div>
 
 <div class="footer">
@@ -85,17 +79,25 @@ function renderNumbers(){
     const btn = document.createElement("button");
     btn.innerText = i + 1;
 
-    if(answeredStatus[q._id] === true){
-      btn.style.background = "#22c55e"; // صح
+    // السؤال الحالي
+    if(i === currentIndex){
+      btn.style.background = "#f59e0b";
     }
 
+    // السؤال محلول صح
+    if(answeredStatus[q._id] === true){
+      btn.style.background = "#22c55e";
+    }
+
+    // السؤال محلول خطأ
     if(answeredStatus[q._id] === false){
-      btn.style.background = "#ef4444"; // خطأ
+      btn.style.background = "#ef4444";
     }
 
     btn.onclick = ()=>{
       currentIndex = i;
       renderQuestion();
+      renderNumbers();
     };
 
     container.appendChild(btn);
@@ -210,6 +212,7 @@ function nextQuestion(){
   if(currentIndex < currentQuestions.length - 1){
     currentIndex++;
     renderQuestion();
+    renderNumbers();
   }
 }
 
@@ -217,6 +220,7 @@ function prevQuestion(){
   if(currentIndex > 0){
     currentIndex--;
     renderQuestion();
+    renderNumbers();
   }
 }
 
