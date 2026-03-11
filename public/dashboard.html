@@ -135,7 +135,6 @@ function renderQuestion(){
   const card = document.createElement("div");
   card.className = "question-card";
 
-  // نشوف إذا السؤال هذا مجاوب قبل
   const answered = answeredStatus[q._id];
 
   card.innerHTML = `
@@ -146,32 +145,57 @@ function renderQuestion(){
       ${q.options.map(opt => {
 
         let disabled = answered !== undefined ? "disabled" : "";
-        let style = "";
+        let color = "";
 
         if(answered !== undefined){
-          if(answered && opt === q.correctAnswer)
-            style = "background:green";
-          else if(!answered && opt === q.correctAnswer)
-            style = "background:green";
+
+          if(opt === q.correctAnswer){
+            color = "background: green";
+          }
+
+          if(!answered && opt === q.correctAnswer){
+            color = "background: green";
+          }
+
         }
 
         return `
           <button class="option-btn"
             ${disabled}
-            style="${style}"
+            style="${color}"
             onclick="submitAnswer('${q._id}','${opt}',this)">
             ${opt}
           </button>
         `;
+
       }).join("")}
     </div>
 
-    <div class="pagination">
-      <button onclick="prevQuestion()">⬅ Prev</button>
-      <span>${currentIndex + 1} / ${currentQuestions.length}</span>
-      <button onclick="nextQuestion()">Next ➡</button>
-    </div>
-  `;
+  <div class="pagination">
+
+    <button onclick="prevQuestion()">⬅</button>
+
+    <div class="numbers">
+      ${currentQuestions.map((q,index)=>{
+
+        let cls = "";
+
+        if(answeredStatus[q._id] === true) cls = "correct";
+        if(answeredStatus[q._id] === false) cls = "wrong";
+
+        return `
+          <button class="page-number ${cls}"
+            onclick="goToQuestion(${index})">
+            ${index+1}
+          </button>
+        `;
+
+      }).join("")}
+  </div>
+
+  <button onclick="nextQuestion()">➡</button>
+
+</div>`;
 
   container.appendChild(card);
 }
