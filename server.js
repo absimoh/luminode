@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const path = require("path");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const Team = require("./models/Team");
 const Question = require("./models/Question");
@@ -180,6 +182,18 @@ app.get("/api/team/:name", async (req, res) => {
 
 /* ================= START SERVER ================= */
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
+const server = http.createServer(app);
+const io = new Server(server);
+
+server.listen(PORT, () => {
   console.log("Server running on port " + PORT);
+});
+
+io.on("connection", (socket) => {
+
+  socket.on("joinTeam", (teamName) => {
+    socket.join(teamName);
+    console.log("User joined team:", teamName);
+  });
+
 });
