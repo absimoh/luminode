@@ -181,13 +181,18 @@ app.put("/api/tickets/:id", async (req, res) => {
 /* ================= GET TEAM DATA ================= */
 app.get("/api/team/:name", async (req, res) => {
 
-  const team = await Team.findOne({ name: req.params.name });
+  const team = await Team.findOne({ 
+    name: req.params.name 
+  });
 
   if (!team) {
     return res.status(404).json({ message: "Team not found" });
   }
 
-  res.json(team);
+  res.json({
+    score: team.score,
+    answers: team.answers
+  });
 
 });
 

@@ -30,7 +30,9 @@ const teamSchema = new mongoose.Schema({
   answers: [
     {
       questionId: String,
-      correct: Boolean
+      correct: Boolean,
+      answer: String,
+      
     }
   ]
 
