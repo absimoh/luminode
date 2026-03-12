@@ -196,6 +196,36 @@ app.get("/api/team/:name", async (req, res) => {
 
 });
 
+/* ================= CREATE TEAM ================= */
+app.post("/api/admin/create-team", async (req, res) => {
+
+  const { name, password } = req.body;
+
+  if(!name || !password){
+    return res.json({message:"Missing data"});
+  }
+
+  const existing = await Team.findOne({ name });
+
+  if(existing){
+    return res.json({message:"Team already exists"});
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const team = new Team({
+    name,
+    password: hashedPassword,
+    score: 0,
+    members: [],
+    answers: []
+  });
+
+  await team.save();
+
+  res.json({message:"Team created"});
+});
+
 /* ================= START SERVER ================= */
 const PORT = process.env.PORT || 10000;
 const server = http.createServer(app);
