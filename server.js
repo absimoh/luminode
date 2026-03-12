@@ -193,7 +193,10 @@ io.on("connection", (socket) => {
 
   socket.on("joinTeam", (teamName) => {
     socket.join(teamName);
-    console.log("User joined team:", teamName);
+  });
+
+  socket.on("answerUpdate", (data) => {
+    io.to(data.teamName).emit("questionAnswered", data);
   });
 
 });
