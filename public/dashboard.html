@@ -139,6 +139,7 @@ async function loadQuestions(category){
 
   teamData.answers.forEach(a => {
     answeredStatus[a.questionId] = a.correct;
+    answeredStatus[a.questionId + "_selected"] = a.answer;
   });
   
   if(data.message){
@@ -149,9 +150,10 @@ async function loadQuestions(category){
 
   currentQuestions = data;
   currentIndex = 0;
-
-  renderQuestion();
+  
   renderNumbers();
+  renderQuestion();
+ 
 }
 
 function renderQuestion(){
@@ -165,44 +167,48 @@ function renderQuestion(){
   }
 
   const q = currentQuestions[currentIndex];
+  const answered = answeredStatus[q._id];
 
   const card = document.createElement("div");
   card.className = "question-card";
 
-  const answered = answeredStatus[q._id];
+  let optionsHTML = "";
+
+  q.options.forEach(opt => {
+
+    let disabled = answered !== undefined ? "disabled" : "";
+    let color = "";
+
+    // اذا السؤال محلول
+    if(answered !== undefined){
+
+      if(opt === q.correctAnswer){
+        color = "background:#22c55e"; // اخضر
+      }
+
+      if(!answered && opt === answeredStatus[q._id+"_selected"]){
+        color = "background:#ef4444"; // احمر
+      }
+
+    }
+
+    optionsHTML += `
+      <button class="option-btn"
+        ${disabled}
+        style="${color}"
+        onclick="submitAnswer('${q._id}','${opt}',this)">
+        ${opt}
+      </button>
+    `;
+
+  });
 
   card.innerHTML = `
     <h3>Question ${currentIndex + 1}</h3>
     <p style="margin-bottom:20px;">${q.question}</p>
 
     <div class="options-grid">
-      ${q.options.map(opt =>{
-
-        let disabled = answered !== undefined ? "disabled" : "";
-        let color = "";
-        if(answered !== undefined){
-          // الإجابة الصحيحة
-          if(opt === q.correctAnswer){
-            color = "background:#22c55e";
-          }
-          // الإجابة التي اختارها الفريق وكانت خطأ
-          if(!answered && opt !== q.correctAnswer){
-            if(opt === answeredStatus[q._id + "_selected"]){
-              color = "background:#ef4444";
-            }
-          }
-
-        return `
-          <button class="option-btn"
-            ${disabled}
-            style="${color}"
-            onclick="submitAnswer('${q._id}','${opt}',this)">
-            ${opt}
-          </button>
-        `;
-
-        }
-      }).join("")}
+      ${optionsHTML}
     </div>
 
     <div class="pagination">
