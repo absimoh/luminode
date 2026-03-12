@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const path = require("path");
+
 const http = require("http");
 const { Server } = require("socket.io");
 
@@ -106,6 +107,16 @@ app.post("/api/submit", async (req, res) => {
   });
 
   await team.save();
+
+  // 🔴 إرسال التحديث لكل أعضاء نفس التيم
+  io.to(teamName).emit("questionAnswered", {
+    questionId,
+    correct,
+    answer
+  });
+
+  // 🔴 تحديث السكور لجميع الفرق
+  io.emit("scoreUpdate");
 
   res.json({ correct });
 
