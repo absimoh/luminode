@@ -12,105 +12,64 @@
     <img src="/org.png">
     <img src="/logo.png">
   </div>
+
+  <div class="nav-links">
+    <a href="/dashboard.html">Dashboard</a>
+    <a href="/leaderboard.html">Leaderboard</a>
+  </div>
 </div>
 
 <div class="container">
 
-  <h1>⚙ Admin Control Panel</h1>
+  <h1>⚙ Admin Panel</h1>
 
-  <div class="admin-controls">
-    <button onclick="toggleChallenges()">Toggle Challenges</button>
-    <button onclick="toggleLeaderboard()">Toggle Leaderboard</button>
+  <!-- ===== CREATE TEAM ===== -->
+  <div class="admin-card">
+
+    <h2>Create Team</h2>
+
+    <input id="teamName" placeholder="Team Name">
+    <input id="teamPassword" placeholder="Password">
+
+    <button onclick="createTeam()">Create Team</button>
+
   </div>
 
-  <h2 style="margin-top:40px;">📩 Support Tickets</h2>
-  <div id="ticketsContainer"></div>
+  <!-- ===== CONTROL ===== -->
+  <div class="admin-card">
+
+    <h2>Control Competition</h2>
+
+    <button onclick="toggleChallenges(true)">Open Challenges</button>
+    <button onclick="toggleChallenges(false)">Close Challenges</button>
+
+    <button onclick="toggleLeaderboard(true)">Open Leaderboard</button>
+    <button onclick="toggleLeaderboard(false)">Close Leaderboard</button>
+
+  </div>
+
+  <!-- ===== TICKETS ===== -->
+  <div class="admin-card">
+
+    <h2>Help Requests</h2>
+
+    <div id="ticketsContainer"></div>
+
+  </div>
 
 </div>
-<div class="admin-create-team">
 
-  <h2>Create Team</h2>
-
-  <input id="teamName" placeholder="Team Name">
-
-  <input id="teamPassword" placeholder="Team Password">
-
-  <button onclick="createTeam()">Create</button>
-
-</div>
 <div class="footer">
-  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
+  © 2026 Abbas Al-Mokhtafi
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
 
-let controlState = {};
+const socket = io();
 
-async function loadControl(){
-  const res = await fetch("/api/control");
-  controlState = await res.json();
-}
-
-async function toggleChallenges(){
-  await fetch("/api/control",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      challengesOpen: !controlState.challengesOpen,
-      leaderboardOpen: controlState.leaderboardOpen
-    })
-  });
-  loadControl();
-  alert("Challenges updated");
-}
-
-async function toggleLeaderboard(){
-  await fetch("/api/control",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      challengesOpen: controlState.challengesOpen,
-      leaderboardOpen: !controlState.leaderboardOpen
-    })
-  });
-  loadControl();
-  alert("Leaderboard updated");
-}
-
-async function loadTickets(){
-  const res = await fetch("/api/tickets");
-  const tickets = await res.json();
-
-  const container = document.getElementById("ticketsContainer");
-  container.innerHTML = "";
-
-  tickets.forEach(ticket => {
-
-    const card = document.createElement("div");
-    card.className = "ticket-card";
-
-    card.innerHTML = `
-      <strong>Team:</strong> ${ticket.teamName}<br>
-      <strong>Message:</strong> ${ticket.message}<br>
-      <strong>Status:</strong> ${ticket.status}<br>
-      <button onclick="closeTicket('${ticket._id}')">Close</button>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-async function closeTicket(id){
-  await fetch(`/api/tickets/${id}`,{
-    method:"PUT"
-  });
-  loadTickets();
-}
-
-loadControl();
-loadTickets();
-setInterval(loadTickets, 5000);
-
+/* ===== CREATE TEAM ===== */
 async function createTeam(){
 
   const name = document.getElementById("teamName").value;
@@ -119,17 +78,68 @@ async function createTeam(){
   const res = await fetch("/api/admin/create-team",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      name,
-      password
-    })
+    body: JSON.stringify({ name, password })
   });
 
   const data = await res.json();
-
   alert(data.message);
-
 }
+
+/* ===== CONTROL ===== */
+async function toggleChallenges(status){
+
+  await fetch("/api/control",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ challengesOpen: status })
+  });
+
+  alert("Updated");
+}
+
+async function toggleLeaderboard(status){
+
+  await fetch("/api/control",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ leaderboardOpen: status })
+  });
+
+  alert("Updated");
+}
+
+/* ===== LOAD TICKETS ===== */
+async function loadTickets(){
+
+  const res = await fetch("/api/tickets");
+  const tickets = await res.json();
+
+  const container = document.getElementById("ticketsContainer");
+  container.innerHTML = "";
+
+  tickets.forEach(t => {
+
+    const div = document.createElement("div");
+    div.className = "ticket-card";
+
+    div.innerHTML = `
+      <strong>${t.teamName}</strong>
+      <p>${t.message}</p>
+    `;
+
+    container.appendChild(div);
+
+  });
+}
+
+/* ===== REALTIME TICKETS ===== */
+socket.on("newTicket", () => {
+  loadTickets();
+});
+
+/* ===== INIT ===== */
+loadTickets();
+
 </script>
 
 </body>
