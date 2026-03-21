@@ -238,3 +238,17 @@ io.on("connection", (socket) => {
     }
   });
 });
+
+/* ================= GET CONTROL ================= */
+app.get("/api/control", async (req, res) => {
+  let control = await Control.findOne();
+
+  if (!control) {
+    control = await Control.create({
+      challengesOpen: true,
+      leaderboardOpen: true
+    });
+  }
+
+  res.json(control);
+});
