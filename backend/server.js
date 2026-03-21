@@ -1,4 +1,5 @@
 require("dotenv").config();
+let onlineUsers = new Set();
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -52,6 +53,10 @@ app.get("/dashboard", (req, res) => {
 
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/pages/admin.html"));
+});
+
+app.get("/admin-login", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/pages/admin-login.html"));
 });
 
 app.get("/leaderboard", (req, res) => {
@@ -275,12 +280,25 @@ server.listen(PORT, () => {
 
 /* ================= SOCKET ================= */
 io.on("connection", (socket) => {
+
   socket.on("joinTeam", (data) => {
     try {
       const decoded = jwt.verify(data.token, "secretkey");
+
       socket.join(decoded.teamName);
+
+      onlineUsers.add(decoded.teamName);
+
+      io.emit("onlineCount", onlineUsers.size);
+
     } catch {
       socket.disconnect();
     }
   });
+
+  socket.on("disconnect", () => {
+    onlineUsers.clear(); // بسيط مؤقت
+    io.emit("onlineCount", onlineUsers.size);
+  });
+
 });

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<title>Admin Dashboard</title>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -21,50 +21,35 @@
 
 <div class="container">
 
-  <h1>⚙ Admin Panel</h1>
+  <h1>⚙ Admin Dashboard</h1>
 
-  <!-- ===== LOGIN ===== -->
-  <div class="admin-card">
-    <h2>Admin Login</h2>
-
-    <input id="adminUser" placeholder="Username">
-    <input id="adminPass" type="password" placeholder="Password">
-
-    <button onclick="adminLogin()">Login</button>
-  </div>
+  <h3>👥 Online Users: <span id="onlineCount">0</span></h3>
 
   <!-- ===== CREATE TEAM ===== -->
   <div class="admin-card">
-
     <h2>Create Team</h2>
 
     <input id="teamName" placeholder="Team Name">
     <input id="teamPassword" placeholder="Password">
 
-    <button onclick="createTeam()">Create Team</button>
-
+    <button class="primary-btn" onclick="createTeam()">Create Team</button>
   </div>
 
   <!-- ===== CONTROL ===== -->
   <div class="admin-card">
-
     <h2>Control Competition</h2>
 
-    <button onclick="toggleChallenges(true)">Open Challenges</button>
-    <button onclick="toggleChallenges(false)">Close Challenges</button>
+    <button class="primary-btn" onclick="toggleChallenges(true)">Open Challenges</button>
+    <button class="danger-btn" onclick="toggleChallenges(false)">Close Challenges</button>
 
-    <button onclick="toggleLeaderboard(true)">Open Leaderboard</button>
-    <button onclick="toggleLeaderboard(false)">Close Leaderboard</button>
-
+    <button class="primary-btn" onclick="toggleLeaderboard(true)">Open Leaderboard</button>
+    <button class="danger-btn" onclick="toggleLeaderboard(false)">Close Leaderboard</button>
   </div>
 
   <!-- ===== TICKETS ===== -->
   <div class="admin-card">
-
     <h2>Help Requests</h2>
-
     <div id="ticketsContainer"></div>
-
   </div>
 
 </div>
@@ -77,40 +62,22 @@
 
 <script>
 
-/* ===== SOCKET ===== */
+/* ===== PROTECTION ===== */
+const token = localStorage.getItem("adminToken");
+
+if(!token){
+  window.location.href = "/admin-login";
+}
+
 const socket = io();
 
-let adminToken = localStorage.getItem("adminToken");
-
-/* ===== ADMIN LOGIN ===== */
-async function adminLogin(){
-
-  const username = document.getElementById("adminUser").value;
-  const password = document.getElementById("adminPass").value;
-
-  const res = await fetch("/api/admin/login",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ username, password })
-  });
-
-  const data = await res.json();
-
-  if(data.token){
-    localStorage.setItem("adminToken", data.token);
-    adminToken = data.token;
-    alert("Login successful 🔐");
-
-    loadTickets(); // 🔥 يحدث البيانات مباشرة
-  }else{
-    alert(data.message || "Login failed");
-  }
-}
+/* ===== ONLINE USERS ===== */
+socket.on("onlineCount", (count) => {
+  document.getElementById("onlineCount").innerText = count;
+});
 
 /* ===== CREATE TEAM ===== */
 async function createTeam(){
-
-  if(!adminToken) return alert("Login first");
 
   const name = document.getElementById("teamName").value;
   const password = document.getElementById("teamPassword").value;
@@ -119,16 +86,14 @@ async function createTeam(){
     method:"POST",
     headers:{
       "Content-Type":"application/json",
-      Authorization: adminToken
+      Authorization: token
     },
     body: JSON.stringify({ name, password })
   });
 
   const data = await res.json();
-
   alert(data.message);
 
-  // 🔥 تفريغ الحقول
   document.getElementById("teamName").value = "";
   document.getElementById("teamPassword").value = "";
 }
@@ -136,13 +101,11 @@ async function createTeam(){
 /* ===== CONTROL ===== */
 async function toggleChallenges(status){
 
-  if(!adminToken) return alert("Login first");
-
   await fetch("/api/control",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
-      Authorization: adminToken
+      Authorization: token
     },
     body: JSON.stringify({ challengesOpen: status })
   });
@@ -152,13 +115,11 @@ async function toggleChallenges(status){
 
 async function toggleLeaderboard(status){
 
-  if(!adminToken) return alert("Login first");
-
   await fetch("/api/control",{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
-      Authorization: adminToken
+      Authorization: token
     },
     body: JSON.stringify({ leaderboardOpen: status })
   });
@@ -169,10 +130,8 @@ async function toggleLeaderboard(status){
 /* ===== LOAD TICKETS ===== */
 async function loadTickets(){
 
-  if(!adminToken) return;
-
   const res = await fetch("/api/tickets",{
-    headers:{ Authorization: adminToken }
+    headers:{ Authorization: token }
   });
 
   const tickets = await res.json();
@@ -188,7 +147,7 @@ async function loadTickets(){
     div.innerHTML = `
       <strong>${t.teamName}</strong>
       <p>${t.message}</p>
-      <button onclick="closeTicket('${t._id}')">Close</button>
+      <button class="danger-btn" onclick="closeTicket('${t._id}')">Close</button>
     `;
 
     container.appendChild(div);
@@ -201,7 +160,7 @@ async function closeTicket(id){
 
   await fetch(`/api/tickets/${id}`,{
     method:"PUT",
-    headers:{ Authorization: adminToken }
+    headers:{ Authorization: token }
   });
 
   loadTickets();
@@ -213,9 +172,7 @@ socket.on("newTicket", () => {
 });
 
 /* ===== INIT ===== */
-if(adminToken){
-  loadTickets();
-}
+loadTickets();
 
 </script>
 
