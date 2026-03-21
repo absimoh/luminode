@@ -35,7 +35,7 @@
     <input type="text" id="memberName" placeholder="Your Name">
     <input type="password" id="teamPassword" placeholder="Team Password">
 
-    <button onclick="joinTeam()">Enter</button>
+    <button onclick="login()">Enter</button>
     <button onclick="closeModal()" class="close-btn">Cancel</button>
   </div>
 </div>
@@ -44,6 +44,7 @@
 
 let selectedTeam = null;
 
+/* ===== LOAD TEAMS ===== */
 async function loadTeams() {
   const res = await fetch("/api/teams");
   const teams = await res.json();
@@ -60,6 +61,7 @@ async function loadTeams() {
   });
 }
 
+/* ===== MODAL ===== */
 function openModal(teamName) {
   selectedTeam = teamName;
   document.getElementById("selectedTeamTitle").innerText = teamName;
@@ -70,31 +72,57 @@ function closeModal() {
   document.getElementById("loginModal").style.display = "none";
 }
 
-async function joinTeam() {
+/* ===== LOGIN 🔐 ===== */
+async function login() {
 
   const memberName = document.getElementById("memberName").value;
   const password = document.getElementById("teamPassword").value;
 
-  const res = await fetch("/api/team/join", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: selectedTeam,
-      password,
-      memberName
-    })
-  });
+  try {
+    const loginRes = await fetch("/api/team/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: selectedTeam,
+        password
+      })
+    });
 
-  const data = await res.json();
+    const loginData = await loginRes.json();
 
-  if (res.ok) {
+    if (!loginData.token) {
+      alert(loginData.message || "Login failed");
+      return;
+    }
+
+    // 💾 حفظ البيانات
+    localStorage.setItem("token", loginData.token);
     localStorage.setItem("teamName", selectedTeam);
-    window.location.href = "/dashboard.html";
-  } else {
-    alert(data.message);
+
+    // 👤 إضافة العضو
+    if (memberName) {
+      await fetch("/api/team/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: selectedTeam,
+          password,
+          memberName
+        })
+      });
+    }
+
+    // 🚀 الانتقال
+    window.location.href = "/dashboard";
+
+  } catch {
+    alert("Server error");
   }
 }
 
+/* ===== INIT ===== */
 loadTeams();
 
 </script>
