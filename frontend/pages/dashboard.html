@@ -155,36 +155,52 @@ let answeredStatus = {};
 /* ===== LOAD QUESTIONS ===== */
 async function loadQuestions(category){
 
-  const res = await fetch(`/api/questions/${category}`, {
-    headers: { Authorization: token }
-  });
+  try {
 
-  const data = await res.json();
+    const res = await fetch(`/api/questions/${category}`, {
+      headers: { Authorization: token }
+    });
 
-  const teamRes = await fetch(`/api/team/${teamName}`, {
-    headers: { Authorization: token }
-  });
+    const data = await res.json();
+    console.log("QUESTIONS:", data); // 🔥 debugging
 
-  const teamData = await teamRes.json();
+    if (!Array.isArray(data)) {
+      document.getElementById("questionsContainer").innerHTML =
+        `<p>${data.message || "Error loading questions"}</p>`;
+      return;
+    }
 
-  answeredStatus = {};
+    if (data.length === 0) {
+      document.getElementById("questionsContainer").innerHTML =
+        `<p>No questions found</p>`;
+      return;
+    }
 
-  teamData.answers.forEach(a => {
-    answeredStatus[a.questionId] = a.correct;
-    answeredStatus[a.questionId + "_selected"] = a.answer;
-  });
+    // ===== GET TEAM ANSWERS =====
+    const teamRes = await fetch(`/api/team/${teamName}`, {
+      headers: { Authorization: token }
+    });
 
-  if(data.message){
+    const teamData = await teamRes.json();
+
+    answeredStatus = {};
+
+    teamData.answers.forEach(a => {
+      answeredStatus[a.questionId] = a.correct;
+    });
+
+    // ===== SET DATA =====
+    currentQuestions = data;
+    currentIndex = 0;
+
+    renderNumbers();
+    renderQuestion();
+
+  } catch (err) {
+    console.error(err);
     document.getElementById("questionsContainer").innerHTML =
-      `<p>${data.message}</p>`;
-    return;
+      `<p>Server error</p>`;
   }
-
-  currentQuestions = data;
-  currentIndex = 0;
-
-  renderNumbers();
-  renderQuestion();
 }
 
 /* ===== RENDER QUESTION ===== */
