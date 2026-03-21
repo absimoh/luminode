@@ -125,7 +125,7 @@ app.post("/api/team/join", async (req, res) => {
         alreadyJoined: true
       });
     }
-    
+
     // 🔥 LIMIT
     if (team.members.length >= 5) {
       return res.status(400).json({
@@ -141,6 +141,44 @@ app.post("/api/team/join", async (req, res) => {
   } catch {
     res.status(500).json({ message: "Server error" });
   }
+});
+
+/* ================= CREATE TEAM ================= */
+app.post("/api/admin/create-team", async (req, res) => {
+
+  try {
+
+    const { name, password } = req.body;
+
+    if(!name || !password){
+      return res.json({ message: "Missing data" });
+    }
+
+    const existing = await Team.findOne({ name });
+
+    if(existing){
+      return res.json({ message: "Team already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const team = new Team({
+      name,
+      password: hashedPassword,
+      score: 0,
+      members: [],
+      answers: []
+    });
+
+    await team.save();
+
+    res.json({ message: "Team created" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+
 });
 
 /* ================= GET TEAM DATA 🔥 FIX ================= */
