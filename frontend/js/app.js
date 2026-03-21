@@ -51,7 +51,7 @@ async function loadTeams() {
         }
 
         // 🚀 انتقال للداشبورد
-        window.location.href = "/dashboard.html";
+        window.location.href = "/dashboard";
 
       } catch (err) {
         alert("Error connecting to server");
