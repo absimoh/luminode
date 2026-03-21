@@ -14,8 +14,8 @@
   </div>
 
   <div class="nav-links">
-    <a href="/dashboard.html">Dashboard</a>
-    <a href="/leaderboard.html">Leaderboard</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/leaderboard">Leaderboard</a>
   </div>
 </div>
 
@@ -77,7 +77,9 @@
 
 <script>
 
+/* ===== SOCKET ===== */
 const socket = io();
+
 let adminToken = localStorage.getItem("adminToken");
 
 /* ===== ADMIN LOGIN ===== */
@@ -98,6 +100,8 @@ async function adminLogin(){
     localStorage.setItem("adminToken", data.token);
     adminToken = data.token;
     alert("Login successful 🔐");
+
+    loadTickets(); // 🔥 يحدث البيانات مباشرة
   }else{
     alert(data.message || "Login failed");
   }
@@ -121,7 +125,12 @@ async function createTeam(){
   });
 
   const data = await res.json();
+
   alert(data.message);
+
+  // 🔥 تفريغ الحقول
+  document.getElementById("teamName").value = "";
+  document.getElementById("teamPassword").value = "";
 }
 
 /* ===== CONTROL ===== */
@@ -138,7 +147,7 @@ async function toggleChallenges(status){
     body: JSON.stringify({ challengesOpen: status })
   });
 
-  alert("Updated");
+  alert("Challenges updated");
 }
 
 async function toggleLeaderboard(status){
@@ -154,7 +163,7 @@ async function toggleLeaderboard(status){
     body: JSON.stringify({ leaderboardOpen: status })
   });
 
-  alert("Updated");
+  alert("Leaderboard updated");
 }
 
 /* ===== LOAD TICKETS ===== */
@@ -204,7 +213,9 @@ socket.on("newTicket", () => {
 });
 
 /* ===== INIT ===== */
-loadTickets();
+if(adminToken){
+  loadTickets();
+}
 
 </script>
 
