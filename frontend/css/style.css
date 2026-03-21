@@ -278,26 +278,29 @@ button:active {
 .teams-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
+  gap: 35px;
   margin-top: 40px;
 }
 
 .team-card {
   background: rgba(15, 25, 60, 0.9);
-  padding: 35px;
-  border-radius: 18px;
+  padding: 55px 30px; /* 🔥 أكبر */
+  border-radius: 22px;
   text-align: center;
   cursor: pointer;
   transition: 0.3s;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 22px; /* 🔥 كبر الخط */
+  font-weight: 700;
+  min-height: 120px; /* 🔥 حجم ثابت */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .team-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 30px rgba(120,100,255,0.8);
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 0 40px rgba(120,100,255,0.9);
 }
-
 /* ===== ADMIN ===== */
 .admin-card {
   background: rgba(15,25,60,0.95);
