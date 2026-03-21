@@ -19,7 +19,7 @@ const app = express();
 /* ================= MIDDLEWARE ================= */
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 /* ================= DATABASE ================= */
 mongoose.connect(process.env.MONGO_URI)
@@ -45,7 +45,7 @@ function auth(req, res, next) {
 
 /* ================= ROOT ================= */
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/pages/index.html"));
 });
 
 /* ================= ADMIN LOGIN 🔐 ================= */
