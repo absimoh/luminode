@@ -278,14 +278,15 @@ button:active {
 .teams-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
+  gap: 20px;
   margin-top: 40px;
 }
 
 .team-card {
   background: rgba(15, 25, 60, 0.9);
-  padding: 30px;
-  border-radius: 16px;
+  padding: 35px;
+  border-radius: 18px;
+  text-align: center;
   cursor: pointer;
   transition: 0.3s;
   font-size: 18px;
