@@ -187,7 +187,12 @@ app.post("/api/submit", auth, async (req, res) => {
 
     if (correct) team.score += question.points;
 
-    team.answers.push({ questionId, correct });
+    team.answers.push({ 
+      questionId, 
+      correct,
+      answer // 🔥 نحفظ الإجابة
+
+    });
     await team.save();
 
     io.to(teamName).emit("questionAnswered", {

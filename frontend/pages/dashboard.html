@@ -187,6 +187,7 @@ async function loadQuestions(category){
 
     teamData.answers.forEach(a => {
       answeredStatus[a.questionId] = a.correct;
+      answeredStatus[a.questionId + "_selected"] = a.answer;
     });
 
     // ===== SET DATA =====
@@ -244,7 +245,7 @@ function renderQuestion(){
       </button>
     `;
   });
-  
+
   card.innerHTML = `
     <h3>Question ${currentIndex + 1}</h3>
     <p style="margin-bottom:20px;">${q.question}</p>
