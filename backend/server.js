@@ -116,13 +116,23 @@ app.post("/api/team/join", async (req, res) => {
     const match = await bcrypt.compare(password, team.password);
     if (!match) return res.status(400).json({ message: "Wrong password" });
     
+     // 🔥 إذا الشخص موجود يرجع طبيعي
+    const exists = team.members.find(m => m.name === memberName);
+
+    if (exists) {
+      return res.json({
+        message: "Welcome back",
+        alreadyJoined: true
+      });
+    }
+    
     // 🔥 LIMIT
     if (team.members.length >= 5) {
       return res.status(400).json({
         message: "Team is full (max 5 members)"
       });
     }
-    
+
     team.members.push({ name: memberName });
     await team.save();
 

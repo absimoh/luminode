@@ -75,6 +75,12 @@ function closeModal() {
 /* ===== LOGIN 🔐 ===== */
 async function login() {
 
+  localStorage.setItem("memberName", memberName);
+  const savedName = localStorage.getItem("memberName");
+
+  if(savedName){
+    document.getElementById("memberName").value = savedName;
+  } 
   const memberName = document.getElementById("memberName").value;
   const password = document.getElementById("teamPassword").value;
 
