@@ -75,16 +75,16 @@ function closeModal() {
 /* ===== LOGIN 🔐 ===== */
 async function login() {
 
-  localStorage.setItem("memberName", memberName);
-  const savedName = localStorage.getItem("memberName");
-
-  if(savedName){
-    document.getElementById("memberName").value = savedName;
-  } 
+  // 🔥 أول شيء نقرأ القيم
   const memberName = document.getElementById("memberName").value;
   const password = document.getElementById("teamPassword").value;
 
+  if(!memberName || !password){
+    return alert("Enter all fields");
+  }
+
   try {
+
     const loginRes = await fetch("/api/team/login", {
       method: "POST",
       headers: {
@@ -103,31 +103,35 @@ async function login() {
       return;
     }
 
-    // 💾 حفظ البيانات
+    // 💾 حفظ البيانات بعد ما تأكدنا
     localStorage.setItem("token", loginData.token);
     localStorage.setItem("teamName", selectedTeam);
+    localStorage.setItem("memberName", memberName); // 🔥 هنا الصحيح
 
     // 👤 إضافة العضو
-    if (memberName) {
-      await fetch("/api/team/join", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: selectedTeam,
-          password,
-          memberName
-        })
-      });
-    }
+    await fetch("/api/team/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: selectedTeam,
+        password,
+        memberName
+      })
+    });
 
     // 🚀 الانتقال
     window.location.href = "/dashboard";
 
-  } catch {
+  } catch (err) {
+    console.error(err);
     alert("Server error");
   }
 }
+const savedName = localStorage.getItem("memberName");
 
+if(savedName){
+  document.getElementById("memberName").value = savedName;
+}
 /* ===== INIT ===== */
 loadTeams();
 
