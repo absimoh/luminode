@@ -19,8 +19,6 @@ const app = express();
 /* ================= MIDDLEWARE ================= */
 app.use(cors());
 app.use(express.json());
-
-// 🔥 مهم: يخدم كل ملفات الفرونت
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 /* ================= DATABASE ================= */
@@ -32,9 +30,7 @@ mongoose.connect(process.env.MONGO_URI)
 function auth(req, res, next) {
   const token = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({ message: "No token" });
-  }
+  if (!token) return res.status(401).json({ message: "No token" });
 
   try {
     const decoded = jwt.verify(token, "secretkey");
@@ -45,14 +41,11 @@ function auth(req, res, next) {
   }
 }
 
-/* ================= ROUTES (FRONTEND) ================= */
-
-// الصفحة الرئيسية
+/* ================= FRONTEND ROUTES ================= */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/pages/index.html"));
 });
 
-// 🔥 صفحات نظيفة بدون .html
 app.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/pages/dashboard.html"));
 });
@@ -107,7 +100,7 @@ app.get("/api/teams", async (req, res) => {
   res.json(teams);
 });
 
-/* ================= JOIN ================= */
+/* ================= JOIN TEAM ================= */
 app.post("/api/team/join", async (req, res) => {
   try {
     const { name, password, memberName } = req.body;
@@ -122,6 +115,25 @@ app.post("/api/team/join", async (req, res) => {
     await team.save();
 
     res.json({ message: "Joined successfully" });
+
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ================= GET TEAM DATA 🔥 FIX ================= */
+app.get("/api/team/:name", async (req, res) => {
+  try {
+    const team = await Team.findOne({ name: req.params.name });
+
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+
+    res.json({
+      score: team.score,
+      answers: team.answers || []
+    });
 
   } catch {
     res.status(500).json({ message: "Server error" });
@@ -148,7 +160,7 @@ app.get("/api/questions/:category", async (req, res) => {
   res.json(questions);
 });
 
-/* ================= ANSWER ================= */
+/* ================= SUBMIT ANSWER ================= */
 app.post("/api/submit", auth, async (req, res) => {
   try {
     const { questionId, answer } = req.body;
@@ -157,9 +169,12 @@ app.post("/api/submit", auth, async (req, res) => {
     const team = await Team.findOne({ name: teamName });
     const question = await Question.findById(questionId);
 
-    if (!team || !question) return res.status(400).json({ message: "Error" });
+    if (!team || !question)
+      return res.status(400).json({ message: "Error" });
 
-    const alreadyAnswered = team.answers.find(a => a.questionId === questionId);
+    const alreadyAnswered = team.answers.find(
+      a => a.questionId === questionId
+    );
 
     if (alreadyAnswered) {
       return res.json({
@@ -175,7 +190,12 @@ app.post("/api/submit", auth, async (req, res) => {
     team.answers.push({ questionId, correct });
     await team.save();
 
-    io.to(teamName).emit("questionAnswered", { questionId, correct, answer });
+    io.to(teamName).emit("questionAnswered", {
+      questionId,
+      correct,
+      answer
+    });
+
     io.emit("scoreUpdate");
 
     res.json({ correct });
@@ -207,6 +227,20 @@ app.post("/api/control", auth, async (req, res) => {
   res.json({ message: "Updated" });
 });
 
+/* ================= GET CONTROL ================= */
+app.get("/api/control", async (req, res) => {
+  let control = await Control.findOne();
+
+  if (!control) {
+    control = await Control.create({
+      challengesOpen: true,
+      leaderboardOpen: true
+    });
+  }
+
+  res.json(control);
+});
+
 /* ================= TICKETS ================= */
 app.post("/api/ticket", async (req, res) => {
   await Ticket.create(req.body);
@@ -216,6 +250,13 @@ app.post("/api/ticket", async (req, res) => {
 app.get("/api/tickets", auth, async (req, res) => {
   const tickets = await Ticket.find().sort({ createdAt: -1 });
   res.json(tickets);
+});
+
+app.put("/api/tickets/:id", auth, async (req, res) => {
+  await Ticket.findByIdAndUpdate(req.params.id, {
+    status: "closed"
+  });
+  res.json({ message: "Ticket closed" });
 });
 
 /* ================= SERVER ================= */
@@ -237,18 +278,4 @@ io.on("connection", (socket) => {
       socket.disconnect();
     }
   });
-});
-
-/* ================= GET CONTROL ================= */
-app.get("/api/control", async (req, res) => {
-  let control = await Control.findOne();
-
-  if (!control) {
-    control = await Control.create({
-      challengesOpen: true,
-      leaderboardOpen: true
-    });
-  }
-
-  res.json(control);
 });
