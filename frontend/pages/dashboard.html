@@ -22,13 +22,13 @@
 <div class="container">
 
   <div class="team-info">
-  <div class="team-name">
-    🛰 Team: <span id="teamNameDisplay"></span>
+    <div class="team-name">
+      🛰 Team: <span id="teamNameDisplay"></span>
+    </div>
+    <div class="team-score">
+      ⭐ Score: <span id="teamScore">0</span>
+    </div>
   </div>
-  <div class="team-score">
-    ⭐ Score: <span id="teamScore">0</span>
-  </div>
-</div>
 
   <button class="help-btn" onclick="openHelpModal()">
     🚨 Request Help
@@ -56,35 +56,45 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 
+const token = localStorage.getItem("token");
 const teamName = localStorage.getItem("teamName");
+
+if (!token || !teamName) {
+  window.location.href = "/";
+}
+
 const socket = io();
 
-socket.emit("joinTeam",teamName);
-
-if (!teamName) window.location.href = "/";
+// 🔐 join باستخدام التوكن
+socket.emit("joinTeam", { token });
 
 document.getElementById("teamNameDisplay").innerText = teamName;
 
+/* ===== SOCKET ===== */
 socket.on("questionAnswered", (data) => {
-
   answeredStatus[data.questionId] = data.correct;
   answeredStatus[data.questionId + "_selected"] = data.answer;
 
   renderNumbers();
   renderQuestion();
   loadScore();
-
 });
 
+/* ===== LOAD SCORE ===== */
 async function loadScore(){
-  const res = await fetch("/api/teams");
+  const res = await fetch("/api/teams", {
+    headers: { Authorization: token }
+  });
+
   const teams = await res.json();
   const team = teams.find(t => t.name === teamName);
+
   if(team){
     document.getElementById("teamScore").innerText = team.score;
   }
 }
 
+/* ===== RENDER NUMBERS ===== */
 function renderNumbers(){
 
   const container = document.getElementById("questionNumbers");
@@ -95,17 +105,14 @@ function renderNumbers(){
     const btn = document.createElement("button");
     btn.innerText = i + 1;
 
-    // السؤال الحالي
     if(i === currentIndex){
       btn.style.background = "#f59e0b";
     }
 
-    // السؤال محلول صح
     if(answeredStatus[q._id] === true){
       btn.style.background = "#22c55e";
     }
 
-    // السؤال محلول خطأ
     if(answeredStatus[q._id] === false){
       btn.style.background = "#ef4444";
     }
@@ -122,8 +129,12 @@ function renderNumbers(){
 
 }
 
+/* ===== LOAD CATEGORIES ===== */
 async function loadCategories(){
-  const res = await fetch("/api/categories");
+  const res = await fetch("/api/categories", {
+    headers: { Authorization: token }
+  });
+
   const categories = await res.json();
 
   const container = document.getElementById("categories");
@@ -141,23 +152,28 @@ let currentQuestions = [];
 let currentIndex = 0;
 let answeredStatus = {};
 
+/* ===== LOAD QUESTIONS ===== */
 async function loadQuestions(category){
 
-  const res = await fetch(`/api/questions/${category}`);
+  const res = await fetch(`/api/questions/${category}`, {
+    headers: { Authorization: token }
+  });
+
   const data = await res.json();
 
-  // نجيب بيانات الفريق
-  const teamRes = await fetch(`/api/team/${teamName}`);
+  const teamRes = await fetch(`/api/team/${teamName}`, {
+    headers: { Authorization: token }
+  });
+
   const teamData = await teamRes.json();
 
-  // نخزن حالة الإجابات
   answeredStatus = {};
 
   teamData.answers.forEach(a => {
     answeredStatus[a.questionId] = a.correct;
     answeredStatus[a.questionId + "_selected"] = a.answer;
   });
-  
+
   if(data.message){
     document.getElementById("questionsContainer").innerHTML =
       `<p>${data.message}</p>`;
@@ -166,12 +182,12 @@ async function loadQuestions(category){
 
   currentQuestions = data;
   currentIndex = 0;
-  
+
   renderNumbers();
   renderQuestion();
- 
 }
 
+/* ===== RENDER QUESTION ===== */
 function renderQuestion(){
 
   const container = document.getElementById("questionsContainer");
@@ -195,17 +211,15 @@ function renderQuestion(){
     let disabled = answered !== undefined ? "disabled" : "";
     let color = "";
 
-    // اذا السؤال محلول
     if(answered !== undefined){
 
       if(opt === q.correctAnswer){
-        color = "background:#22c55e"; // اخضر
+        color = "background:#22c55e";
       }
 
       if(!answered && opt === answeredStatus[q._id+"_selected"]){
-        color = "background:#ef4444"; // احمر
+        color = "background:#ef4444";
       }
-
     }
 
     optionsHTML += `
@@ -216,7 +230,6 @@ function renderQuestion(){
         ${opt}
       </button>
     `;
-
   });
 
   card.innerHTML = `
@@ -236,6 +249,7 @@ function renderQuestion(){
   container.appendChild(card);
 }
 
+/* ===== NAVIGATION ===== */
 function nextQuestion(){
   if(currentIndex < currentQuestions.length - 1){
     currentIndex++;
@@ -252,13 +266,16 @@ function prevQuestion(){
   }
 }
 
+/* ===== SUBMIT ANSWER 🔐 ===== */
 async function submitAnswer(questionId, answer, btn){
 
   const res = await fetch("/api/submit",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: token
+    },
     body: JSON.stringify({
-      teamName,
       questionId,
       answer
     })
@@ -267,7 +284,6 @@ async function submitAnswer(questionId, answer, btn){
   const data = await res.json();
 
   socket.emit("answerUpdate", {
-    teamName,
     questionId,
     answer,
     correct: data.correct
@@ -275,10 +291,11 @@ async function submitAnswer(questionId, answer, btn){
 
   answeredStatus[questionId] = data.correct;
   answeredStatus[questionId + "_selected"] = answer;
+
   renderNumbers();
 
   btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
-  
+
   if(data.correct){
     btn.style.background = "green";
     await loadScore();
@@ -288,7 +305,6 @@ async function submitAnswer(questionId, answer, btn){
 }
 
 /* ===== HELP SYSTEM ===== */
-
 function openHelpModal(){
   document.getElementById("helpModal").style.display = "flex";
 }
@@ -302,17 +318,21 @@ async function sendHelp(){
 
   await fetch("/api/ticket",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: token
+    },
     body: JSON.stringify({
       teamName,
       message
     })
   });
 
-  alert("Help request sent to admin");
+  alert("Help request sent");
   closeHelpModal();
 }
 
+/* ===== INIT ===== */
 loadScore();
 loadCategories();
 

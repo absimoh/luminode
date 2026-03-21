@@ -23,6 +23,16 @@
 
   <h1>⚙ Admin Panel</h1>
 
+  <!-- ===== LOGIN ===== -->
+  <div class="admin-card">
+    <h2>Admin Login</h2>
+
+    <input id="adminUser" placeholder="Username">
+    <input id="adminPass" type="password" placeholder="Password">
+
+    <button onclick="adminLogin()">Login</button>
+  </div>
+
   <!-- ===== CREATE TEAM ===== -->
   <div class="admin-card">
 
@@ -68,16 +78,45 @@
 <script>
 
 const socket = io();
+let adminToken = localStorage.getItem("adminToken");
+
+/* ===== ADMIN LOGIN ===== */
+async function adminLogin(){
+
+  const username = document.getElementById("adminUser").value;
+  const password = document.getElementById("adminPass").value;
+
+  const res = await fetch("/api/admin/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+
+  if(data.token){
+    localStorage.setItem("adminToken", data.token);
+    adminToken = data.token;
+    alert("Login successful 🔐");
+  }else{
+    alert(data.message || "Login failed");
+  }
+}
 
 /* ===== CREATE TEAM ===== */
 async function createTeam(){
+
+  if(!adminToken) return alert("Login first");
 
   const name = document.getElementById("teamName").value;
   const password = document.getElementById("teamPassword").value;
 
   const res = await fetch("/api/admin/create-team",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: adminToken
+    },
     body: JSON.stringify({ name, password })
   });
 
@@ -88,9 +127,14 @@ async function createTeam(){
 /* ===== CONTROL ===== */
 async function toggleChallenges(status){
 
+  if(!adminToken) return alert("Login first");
+
   await fetch("/api/control",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: adminToken
+    },
     body: JSON.stringify({ challengesOpen: status })
   });
 
@@ -99,9 +143,14 @@ async function toggleChallenges(status){
 
 async function toggleLeaderboard(status){
 
+  if(!adminToken) return alert("Login first");
+
   await fetch("/api/control",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: adminToken
+    },
     body: JSON.stringify({ leaderboardOpen: status })
   });
 
@@ -111,7 +160,12 @@ async function toggleLeaderboard(status){
 /* ===== LOAD TICKETS ===== */
 async function loadTickets(){
 
-  const res = await fetch("/api/tickets");
+  if(!adminToken) return;
+
+  const res = await fetch("/api/tickets",{
+    headers:{ Authorization: adminToken }
+  });
+
   const tickets = await res.json();
 
   const container = document.getElementById("ticketsContainer");
@@ -125,6 +179,7 @@ async function loadTickets(){
     div.innerHTML = `
       <strong>${t.teamName}</strong>
       <p>${t.message}</p>
+      <button onclick="closeTicket('${t._id}')">Close</button>
     `;
 
     container.appendChild(div);
@@ -132,7 +187,18 @@ async function loadTickets(){
   });
 }
 
-/* ===== REALTIME TICKETS ===== */
+/* ===== CLOSE TICKET ===== */
+async function closeTicket(id){
+
+  await fetch(`/api/tickets/${id}`,{
+    method:"PUT",
+    headers:{ Authorization: adminToken }
+  });
+
+  loadTickets();
+}
+
+/* ===== REALTIME ===== */
 socket.on("newTicket", () => {
   loadTickets();
 });
