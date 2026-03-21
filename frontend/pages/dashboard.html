@@ -46,10 +46,22 @@
 <!-- ===== HELP MODAL ===== -->
 <div id="helpModal" class="modal">
   <div class="modal-content">
-    <h2>Request Help</h2>
-    <textarea id="helpMessage" placeholder="Describe your issue..." style="width:100%;padding:10px;border-radius:8px;"></textarea>
-    <button onclick="sendHelp()">Send</button>
-    <button onclick="closeHelpModal()" class="close-btn">Cancel</button>
+    <h2>🚨 Request Help</h2>
+
+    <textarea 
+      id="helpMessage"
+      class="input-box"
+      placeholder="Describe your issue..."
+    ></textarea>
+
+    <button class="primary-btn" onclick="sendHelp()">
+      Send Request
+    </button>
+
+    <button class="danger-btn" onclick="closeHelpModal()">
+      Cancel
+    </button>
+
   </div>
 </div>
 
