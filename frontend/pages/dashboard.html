@@ -224,30 +224,27 @@ function renderQuestion(){
 
   q.options.forEach(opt => {
 
-    let disabled = answered !== undefined ? "disabled" : "";
-    let color = "";
+    let disabled = answeredStatus[q._id] !== undefined ? "disabled" : "";
 
-    if(answered !== undefined){
+    let selected = answeredStatus[q._id + "_selected"] === opt;
 
-      if(opt === q.correctAnswer){
-        color = "background:#22c55e";
-      }
+    let style = "";
 
-      if(!answered && opt === answeredStatus[q._id+"_selected"]){
-        color = "background:#ef4444";
-      }
+    if (answeredStatus[q._id] !== undefined) {
+      if (selected && answeredStatus[q._id]) style = "background: green;";
+      else if (selected && !answeredStatus[q._id]) style = "background: red;";
     }
 
     optionsHTML += `
       <button class="option-btn"
         ${disabled}
-        style="${color}"
+        style="${style}"
         onclick="submitAnswer('${q._id}','${opt}',this)">
         ${opt}
       </button>
     `;
   });
-
+  
   card.innerHTML = `
     <h3>Question ${currentIndex + 1}</h3>
     <p style="margin-bottom:20px;">${q.question}</p>
