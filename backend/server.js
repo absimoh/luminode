@@ -67,7 +67,7 @@ app.get("/leaderboard", (req, res) => {
 app.post("/api/admin/login", async (req, res) => {
   const { username, password } = req.body;
 
-  if (username === "admin" && password === "1234") {
+  if (username === "Absi" && password === "Absi1234") {
     const token = jwt.sign({ role: "admin" }, "secretkey", { expiresIn: "3h" });
     return res.json({ token });
   }
