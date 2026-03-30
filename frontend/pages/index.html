@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Luminode Competition</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="navbar">
+  <div class="nav-left">
+    <img src="/assets/images/logo.png">
+    <img src="/assets/images/org.png">
+  </div>
+</div>
+
+<div class="container">
+
+  <h1>Select Your Team</h1>
+  <p class="subtitle">Choose your team to enter the competition</p>
+
+  <div id="teamsGrid" class="teams-grid"></div>
+
+</div>
+
+<div class="footer">
+  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
+</div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <h2 id="selectedTeamTitle"></h2>
+
+    <input type="text" id="memberName" placeholder="Your Name">
+    <input type="password" id="teamPassword" placeholder="Team Password">
+
+    <button class="primary-btn" onclick="login()">Enter</button>
+    <button class="danger-btn" onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+
+let selectedTeam = null;
+
+/* ===== LOAD TEAMS ===== */
+async function loadTeams() {
+  const res = await fetch("/api/teams");
+  const teams = await res.json();
+
+  const grid = document.getElementById("teamsGrid");
+  grid.innerHTML = "";
+
+  teams.forEach(team => {
+    const card = document.createElement("div");
+    card.className = "team-card";
+    card.innerHTML = `<h3>${team.name}</h3>`;
+    card.onclick = () => openModal(team.name);
+    grid.appendChild(card);
+  });
+}
+
+/* ===== MODAL ===== */
+function openModal(teamName) {
+  selectedTeam = teamName;
+  document.getElementById("selectedTeamTitle").innerText = teamName;
+  document.getElementById("loginModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("loginModal").style.display = "none";
+}
+
+/* ===== LOGIN 🔐 ===== */
+async function login() {
+
+  // 🔥 أول شيء نقرأ القيم
+  const memberName = document.getElementById("memberName").value;
+  const password = document.getElementById("teamPassword").value;
+
+  if(!memberName || !password){
+    return alert("Enter all fields");
+  }
+
+  try {
+
+    const loginRes = await fetch("/api/team/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: selectedTeam,
+        password
+      })
+    });
+
+    const loginData = await loginRes.json();
+
+    if (!loginData.token) {
+      alert(loginData.message || "Login failed");
+      return;
+    }
+
+    // 💾 حفظ البيانات بعد ما تأكدنا
+    localStorage.setItem("token", loginData.token);
+    localStorage.setItem("teamName", selectedTeam);
+    localStorage.setItem("memberName", memberName); // 🔥 هنا الصحيح
+
+    // 👤 إضافة العضو
+    await fetch("/api/team/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: selectedTeam,
+        password,
+        memberName
+      })
+    });
+
+    // 🚀 الانتقال
+    window.location.href = "/dashboard";
+
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
+}
+const savedName = localStorage.getItem("memberName");
+
+if(savedName){
+  document.getElementById("memberName").value = savedName;
+}
+/* ===== INIT ===== */
+loadTeams();
+
+</script>
+
+</body>
+</html>

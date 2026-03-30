@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1>🔐 Admin Login</h1>
+
+  <div class="admin-card">
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="primary-btn" onclick="login()">Login</button>
+
+  </div>
+
+</div>
+
+<script>
+async function login(){
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("/api/admin/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+
+  if(data.token){
+    localStorage.setItem("adminToken", data.token);
+    window.location.href = "/admin";
+  }else{
+    alert("Login failed ❌");
+  }
+}
+</script>
+
+</body>
+</html>

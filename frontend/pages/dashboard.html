@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Team Dashboard</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="navbar">
+  <div class="nav-left">
+    <img src="/assets/images/logo.png">
+    <img src="/assets/images/org.png">
+  </div>
+
+  <div class="nav-links">
+    <a href="/dashboard">Home</a>
+    <a href="/leaderboard">Leaderboard</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="team-info">
+    <div class="team-name">
+      🛰 Team: <span id="teamNameDisplay"></span>
+    </div>
+    <div class="team-score">
+      ⭐ Score: <span id="teamScore">0</span>
+    </div>
+  </div>
+
+  <button class="help-btn" onclick="openHelpModal()">
+    🚨 Request Help
+  </button>
+
+  <div id="categories" class="category-grid"></div>
+  <div id="questionNumbers" class="question-numbers-top"></div>
+  <div id="questionsContainer"></div>
+</div>
+
+<div class="footer">
+  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
+</div>
+
+<!-- ===== HELP MODAL ===== -->
+<div id="helpModal" class="modal">
+  <div class="modal-content">
+    <h2>🚨 Request Help</h2>
+
+    <textarea 
+      id="helpMessage"
+      class="input-box"
+      placeholder="Describe your issue..."
+    ></textarea>
+
+    <button class="primary-btn" onclick="sendHelp()">
+      Send Request
+    </button>
+
+    <button class="danger-btn" onclick="closeHelpModal()">
+      Cancel
+    </button>
+
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+const token = localStorage.getItem("token");
+const teamName = localStorage.getItem("teamName");
+
+if (!token || !teamName) {
+  window.location.href = "/";
+}
+
+const socket = io();
+
+// 🔐 join باستخدام التوكن
+socket.emit("joinTeam", { token });
+
+document.getElementById("teamNameDisplay").innerText = teamName;
+
+/* ===== SOCKET ===== */
+socket.on("questionAnswered", (data) => {
+  answeredStatus[data.questionId] = data.correct;
+  answeredStatus[data.questionId + "_selected"] = data.answer;
+
+  renderNumbers();
+  renderQuestion();
+  loadScore();
+});
+
+/* ===== LOAD SCORE ===== */
+async function loadScore(){
+  const res = await fetch("/api/teams", {
+    headers: { Authorization: token }
+  });
+
+  const teams = await res.json();
+  const team = teams.find(t => t.name === teamName);
+
+  if(team){
+    document.getElementById("teamScore").innerText = team.score;
+  }
+}
+
+/* ===== RENDER NUMBERS ===== */
+function renderNumbers(){
+
+  const container = document.getElementById("questionNumbers");
+  container.innerHTML = "";
+
+  currentQuestions.forEach((q,i)=>{
+
+    const btn = document.createElement("button");
+    btn.innerText = i + 1;
+
+    if(i === currentIndex){
+      btn.style.background = "#f59e0b";
+    }
+
+    if(answeredStatus[q._id] === true){
+      btn.style.background = "#22c55e";
+    }
+
+    if(answeredStatus[q._id] === false){
+      btn.style.background = "#ef4444";
+    }
+
+    btn.onclick = ()=>{
+      currentIndex = i;
+      renderQuestion();
+      renderNumbers();
+    };
+
+    container.appendChild(btn);
+
+  });
+
+}
+
+/* ===== LOAD CATEGORIES ===== */
+async function loadCategories(){
+  const res = await fetch("/api/categories", {
+    headers: { Authorization: token }
+  });
+
+  const categories = await res.json();
+
+  const container = document.getElementById("categories");
+  container.innerHTML = "";
+
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.innerText = cat;
+    btn.onclick = () => loadQuestions(cat);
+    container.appendChild(btn);
+  });
+}
+
+let currentQuestions = [];
+let currentIndex = 0;
+let answeredStatus = {};
+
+/* ===== LOAD QUESTIONS ===== */
+async function loadQuestions(category){
+
+  try {
+
+    const res = await fetch(`/api/questions/${category}`, {
+      headers: { Authorization: token }
+    });
+
+    const data = await res.json();
+    console.log("QUESTIONS:", data); // 🔥 debugging
+
+    if (!Array.isArray(data)) {
+      document.getElementById("questionsContainer").innerHTML =
+        `<p>${data.message || "Error loading questions"}</p>`;
+      return;
+    }
+
+    if (data.length === 0) {
+      document.getElementById("questionsContainer").innerHTML =
+        `<p>No questions found</p>`;
+      return;
+    }
+
+    // ===== GET TEAM ANSWERS =====
+    const teamRes = await fetch(`/api/team/${teamName}`, {
+      headers: { Authorization: token }
+    });
+
+    const teamData = await teamRes.json();
+
+    answeredStatus = {};
+
+    teamData.answers.forEach(a => {
+      answeredStatus[a.questionId] = a.correct;
+      answeredStatus[a.questionId + "_selected"] = a.answer;
+    });
+
+    // ===== SET DATA =====
+    currentQuestions = data;
+    currentIndex = 0;
+
+    renderNumbers();
+    renderQuestion();
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("questionsContainer").innerHTML =
+      `<p>Server error</p>`;
+  }
+}
+
+/* ===== RENDER QUESTION ===== */
+function renderQuestion(){
+
+  const container = document.getElementById("questionsContainer");
+  container.innerHTML = "";
+
+  if(currentQuestions.length === 0){
+    container.innerHTML = "<p>No questions available</p>";
+    return;
+  }
+
+  const q = currentQuestions[currentIndex];
+  const answered = answeredStatus[q._id];
+
+  const card = document.createElement("div");
+  card.className = "question-card";
+
+  let optionsHTML = "";
+
+  q.options.forEach(opt => {
+
+    let disabled = answeredStatus[q._id] !== undefined ? "disabled" : "";
+
+    let selected = answeredStatus[q._id + "_selected"] === opt;
+
+    let style = "";
+
+    if (answeredStatus[q._id] !== undefined) {
+      if (selected && answeredStatus[q._id]) style = "background: green;";
+      else if (selected && !answeredStatus[q._id]) style = "background: red;";
+    }
+
+    optionsHTML += `
+      <button class="option-btn"
+        ${disabled}
+        style="${style}"
+        onclick="submitAnswer('${q._id}','${opt}',this)">
+        ${opt}
+      </button>
+    `;
+  });
+
+  card.innerHTML = `
+    <h3>Question ${currentIndex + 1}</h3>
+    <p style="margin-bottom:20px;">${q.question}</p>
+
+    <div class="options-grid">
+      ${optionsHTML}
+    </div>
+
+    <div class="pagination">
+      <button onclick="prevQuestion()">⬅ Prev</button>
+      <button onclick="nextQuestion()">Next ➡</button>
+    </div>
+  `;
+
+  container.appendChild(card);
+}
+
+/* ===== NAVIGATION ===== */
+function nextQuestion(){
+  if(currentIndex < currentQuestions.length - 1){
+    currentIndex++;
+    renderQuestion();
+    renderNumbers();
+  }
+}
+
+function prevQuestion(){
+  if(currentIndex > 0){
+    currentIndex--;
+    renderQuestion();
+    renderNumbers();
+  }
+}
+
+/* ===== SUBMIT ANSWER 🔐 ===== */
+async function submitAnswer(questionId, answer, btn){
+
+  const res = await fetch("/api/submit",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: token
+    },
+    body: JSON.stringify({
+      questionId,
+      answer
+    })
+  });
+
+  const data = await res.json();
+
+  socket.emit("answerUpdate", {
+    questionId,
+    answer,
+    correct: data.correct
+  });
+
+  answeredStatus[questionId] = data.correct;
+  answeredStatus[questionId + "_selected"] = answer;
+
+  renderNumbers();
+
+  btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
+
+  if(data.correct){
+    btn.style.background = "green";
+    await loadScore();
+  }else{
+    btn.style.background = "red";
+  }
+}
+
+/* ===== HELP SYSTEM ===== */
+function openHelpModal(){
+  document.getElementById("helpModal").style.display = "flex";
+}
+
+function closeHelpModal(){
+  document.getElementById("helpModal").style.display = "none";
+}
+
+async function sendHelp(){
+  const message = document.getElementById("helpMessage").value;
+
+  await fetch("/api/ticket",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization: token
+    },
+    body: JSON.stringify({
+      teamName,
+      message
+    })
+  });
+
+  alert("Help request sent");
+  closeHelpModal();
+}
+
+/* ===== INIT ===== */
+loadScore();
+loadCategories();
+
+</script>
+
+</body>
+</html>
