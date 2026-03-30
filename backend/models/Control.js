@@ -10,6 +10,16 @@ const controlSchema = new mongoose.Schema({
   leaderboardOpen: {
     type: Boolean,
     default: false
+  },
+
+  competitionName: {
+    type: String,
+    default: "Luminode Competition"
+  },
+
+  announcement: {
+    type: String,
+    default: ""
   }
 
 }, { timestamps: true });

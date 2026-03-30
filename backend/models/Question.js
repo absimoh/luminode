@@ -10,7 +10,13 @@ const questionSchema = new mongoose.Schema({
 
   options: {
     type: [String],
-    required: true
+    required: true,
+    validate: {
+      validator: function(arr) {
+        return arr.length >= 2;
+      },
+      message: "At least 2 options required"
+    }
   },
 
   correctAnswer: {
@@ -27,6 +33,17 @@ const questionSchema = new mongoose.Schema({
   points: {
     type: Number,
     default: 1
+  },
+
+  difficulty: {
+    type: String,
+    enum: ["easy", "medium", "hard"],
+    default: "medium"
+  },
+
+  timeLimit: {
+    type: Number, // seconds
+    default: 30
   },
 
   isActive: {

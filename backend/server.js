@@ -1,5 +1,6 @@
 require("dotenv").config();
 let onlineUsers = new Set();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -10,7 +11,7 @@ const jwt = require("jsonwebtoken");
 const http = require("http");
 const { Server } = require("socket.io");
 
-const Team = require("./models/Team");
+const User = require("./models/User");
 const Question = require("./models/Question");
 const Control = require("./models/Control");
 const Ticket = require("./models/Ticket");
@@ -63,6 +64,15 @@ app.get("/leaderboard", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/pages/leaderboard.html"));
 });
 
+/* ================= LOGIN + REGISTER PAGES ================= */
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/pages/register.html"));
+});
+
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/pages/login.html"));
+});
+
 /* ================= ADMIN LOGIN ================= */
 app.post("/api/admin/login", async (req, res) => {
   const { username, password } = req.body;
@@ -75,125 +85,53 @@ app.post("/api/admin/login", async (req, res) => {
   res.status(401).json({ message: "Invalid credentials" });
 });
 
-/* ================= TEAM LOGIN ================= */
-app.post("/api/team/login", async (req, res) => {
+/* ================= USER REGISTER ================= */
+app.post("/api/register", async (req, res) => {
   try {
-    const { name, password } = req.body;
+    const { username, email, password } = req.body;
 
-    const team = await Team.findOne({ name });
-    if (!team) return res.status(404).json({ message: "Team not found" });
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
 
-    const match = await bcrypt.compare(password, team.password);
+    const exist = await User.findOne({ email });
+    if (exist) return res.status(400).json({ message: "Email exists" });
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    await User.create({
+      username,
+      email,
+      password: hashed,
+      score: 0,
+      answers: []
+    });
+
+    res.json({ message: "User created successfully" });
+
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ================= USER LOGIN ================= */
+app.post("/api/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: "Wrong password" });
 
     const token = jwt.sign(
-      { teamName: team.name },
+      { userId: user._id },
       "secretkey",
       { expiresIn: "2h" }
     );
 
     res.json({ token });
-
-  } catch {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-/* ================= TEAMS ================= */
-app.get("/api/teams", async (req, res) => {
-  const teams = await Team.find().select("name score");
-  res.json(teams);
-});
-
-/* ================= JOIN TEAM ================= */
-app.post("/api/team/join", async (req, res) => {
-  try {
-    const { name, password, memberName } = req.body;
-
-    const team = await Team.findOne({ name });
-    if (!team) return res.status(404).json({ message: "Team not found" });
-
-    const match = await bcrypt.compare(password, team.password);
-    if (!match) return res.status(400).json({ message: "Wrong password" });
-    
-     // 🔥 إذا الشخص موجود يرجع طبيعي
-    const exists = team.members.find(m => m.name === memberName);
-
-    if (exists) {
-      return res.json({
-        message: "Welcome back",
-        alreadyJoined: true
-      });
-    }
-
-    // 🔥 LIMIT
-    if (team.members.length >= 5) {
-      return res.status(400).json({
-        message: "Team is full (max 5 members)"
-      });
-    }
-
-    team.members.push({ name: memberName });
-    await team.save();
-
-    res.json({ message: "Joined successfully" });
-
-  } catch {
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-/* ================= CREATE TEAM ================= */
-app.post("/api/admin/create-team", async (req, res) => {
-
-  try {
-
-    const { name, password } = req.body;
-
-    if(!name || !password){
-      return res.json({ message: "Missing data" });
-    }
-
-    const existing = await Team.findOne({ name });
-
-    if(existing){
-      return res.json({ message: "Team already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const team = new Team({
-      name,
-      password: hashedPassword,
-      score: 0,
-      members: [],
-      answers: []
-    });
-
-    await team.save();
-
-    res.json({ message: "Team created" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-
-});
-
-/* ================= GET TEAM DATA 🔥 FIX ================= */
-app.get("/api/team/:name", async (req, res) => {
-  try {
-    const team = await Team.findOne({ name: req.params.name });
-
-    if (!team) {
-      return res.status(404).json({ message: "Team not found" });
-    }
-
-    res.json({
-      score: team.score,
-      answers: team.answers || []
-    });
 
   } catch {
     res.status(500).json({ message: "Server error" });
@@ -224,16 +162,15 @@ app.get("/api/questions/:category", async (req, res) => {
 app.post("/api/submit", auth, async (req, res) => {
   try {
     const { questionId, answer } = req.body;
-    const teamName = req.user.teamName;
 
-    const team = await Team.findOne({ name: teamName });
+    const user = await User.findById(req.user.userId);
     const question = await Question.findById(questionId);
 
-    if (!team || !question)
+    if (!user || !question)
       return res.status(400).json({ message: "Error" });
 
-    const alreadyAnswered = team.answers.find(
-      a => a.questionId === questionId
+    const alreadyAnswered = user.answers.find(
+      a => a.questionId == questionId // 👈 FIX مهم
     );
 
     if (alreadyAnswered) {
@@ -245,21 +182,15 @@ app.post("/api/submit", auth, async (req, res) => {
 
     const correct = question.correctAnswer === answer;
 
-    if (correct) team.score += question.points;
+    if (correct) user.score += question.points;
 
-    team.answers.push({ 
-      questionId, 
-      correct,
-      answer // 🔥 نحفظ الإجابة
-
-    });
-    await team.save();
-
-    io.to(teamName).emit("questionAnswered", {
+    user.answers.push({
       questionId,
       correct,
       answer
     });
+
+    await user.save();
 
     io.emit("scoreUpdate");
 
@@ -277,8 +208,8 @@ app.get("/api/leaderboard", async (req, res) => {
   if (!control || !control.leaderboardOpen)
     return res.status(403).json({ message: "Leaderboard closed" });
 
-  const teams = await Team.find().sort({ score: -1 });
-  res.json(teams);
+  const users = await User.find().sort({ score: -1 });
+  res.json(users);
 });
 
 /* ================= CONTROL ================= */
@@ -292,7 +223,6 @@ app.post("/api/control", auth, async (req, res) => {
   res.json({ message: "Updated" });
 });
 
-/* ================= GET CONTROL ================= */
 app.get("/api/control", async (req, res) => {
   let control = await Control.findOne();
 
@@ -336,13 +266,13 @@ server.listen(PORT, () => {
 /* ================= SOCKET ================= */
 io.on("connection", (socket) => {
 
-  socket.on("joinTeam", (data) => {
+  socket.on("joinUser", (data) => {
     try {
       const decoded = jwt.verify(data.token, "secretkey");
 
-      socket.join(decoded.teamName);
+      socket.join(decoded.userId.toString());
 
-      onlineUsers.add(decoded.teamName);
+      onlineUsers.add(decoded.userId);
 
       io.emit("onlineCount", onlineUsers.size);
 
@@ -352,7 +282,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    onlineUsers.clear(); // بسيط مؤقت
+    onlineUsers.clear();
     io.emit("onlineCount", onlineUsers.size);
   });
 

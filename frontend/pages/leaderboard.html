@@ -33,23 +33,22 @@
 
 <script>
 
-/* ===== LOAD LEADERBOARD ===== */
 async function loadLeaderboard(){
 
   const res = await fetch("/api/leaderboard");
-  const teams = await res.json();
+  const users = await res.json();
 
   const container = document.getElementById("leaderboardContainer");
   container.innerHTML = "";
 
-  teams.forEach((team, index) => {
+  users.forEach((user, index) => {
 
     const div = document.createElement("div");
     div.className = "leaderboard-row";
 
     div.innerHTML = `
-      <span> #${index + 1} - ${team.name}</span>
-      <span>⭐ ${team.score}</span>
+      <span> #${index + 1} - ${user.username || "User"}</span>
+      <span>⭐ ${user.score}</span>
     `;
 
     container.appendChild(div);
@@ -64,6 +63,5 @@ setInterval(loadLeaderboard, 3000);
 loadLeaderboard();
 
 </script>
-
 </body>
 </html>

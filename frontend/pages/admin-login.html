@@ -18,31 +18,49 @@
 
     <button class="primary-btn" onclick="login()">Login</button>
 
+    <p id="msg" style="color:red; margin-top:10px;"></p>
+
   </div>
 
 </div>
 
 <script>
+
 async function login(){
 
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
+  const msg = document.getElementById("msg");
 
-  const res = await fetch("/api/admin/login",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ username, password })
-  });
+  msg.innerText = "";
 
-  const data = await res.json();
+  if(!username || !password){
+    msg.innerText = "Enter all fields";
+    return;
+  }
 
-  if(data.token){
-    localStorage.setItem("adminToken", data.token);
-    window.location.href = "/admin";
-  }else{
-    alert("Login failed ❌");
+  try {
+
+    const res = await fetch("/api/admin/login",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    if(data.token){
+      localStorage.setItem("adminToken", data.token);
+      window.location.href = "/admin";
+    }else{
+      msg.innerText = data.message || "Login failed ❌";
+    }
+
+  } catch {
+    msg.innerText = "Server error";
   }
 }
+
 </script>
 
 </body>

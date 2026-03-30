@@ -25,16 +25,6 @@
 
   <h3>👥 Online Users: <span id="onlineCount">0</span></h3>
 
-  <!-- ===== CREATE TEAM ===== -->
-  <div class="admin-card">
-    <h2>Create Team</h2>
-
-    <input id="teamName" placeholder="Team Name">
-    <input id="teamPassword" placeholder="Password">
-
-    <button class="primary-btn" onclick="createTeam()">Create Team</button>
-  </div>
-
   <!-- ===== CONTROL ===== -->
   <div class="admin-card">
     <h2>Control Competition</h2>
@@ -75,28 +65,6 @@ const socket = io();
 socket.on("onlineCount", (count) => {
   document.getElementById("onlineCount").innerText = count;
 });
-
-/* ===== CREATE TEAM ===== */
-async function createTeam(){
-
-  const name = document.getElementById("teamName").value;
-  const password = document.getElementById("teamPassword").value;
-
-  const res = await fetch("/api/admin/create-team",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization: token
-    },
-    body: JSON.stringify({ name, password })
-  });
-
-  const data = await res.json();
-  alert(data.message);
-
-  document.getElementById("teamName").value = "";
-  document.getElementById("teamPassword").value = "";
-}
 
 /* ===== CONTROL ===== */
 async function toggleChallenges(status){
@@ -145,7 +113,7 @@ async function loadTickets(){
     div.className = "ticket-card";
 
     div.innerHTML = `
-      <strong>${t.teamName}</strong>
+      <strong>User</strong>
       <p>${t.message}</p>
       <button class="danger-btn" onclick="closeTicket('${t._id}')">Close</button>
     `;

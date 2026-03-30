@@ -69,40 +69,84 @@
 <script>
 
 const token = localStorage.getItem("token");
-const teamName = localStorage.getItem("teamName");
 
-if (!token || !teamName) {
-  window.location.href = "/";
+if (!token) {
+  window.location.href = "/login";
 }
 
 const socket = io();
 
-// 🔐 join باستخدام التوكن
-socket.emit("joinTeam", { token });
+// 🔐 join user
+socket.emit("joinUser", { token });
 
-document.getElementById("teamNameDisplay").innerText = teamName;
+/* ===== USER INFO ===== */
+let userScore = 0;
+
+async function loadScore(){
+  const res = await fetch("/api/leaderboard");
+  const users = await res.json();
+
+  const myToken = JSON.parse(atob(token.split('.')[1]));
+  const myId = myToken.userId;
+
+  const me = users.find(u => u._id === myId);
+
+  if(me){
+    userScore = me.score;
+    document.getElementById("teamScore").innerText = userScore;
+    document.getElementById("teamNameDisplay").innerText = "User";
+  }
+}
 
 /* ===== SOCKET ===== */
-socket.on("questionAnswered", (data) => {
-  answeredStatus[data.questionId] = data.correct;
-  answeredStatus[data.questionId + "_selected"] = data.answer;
-
-  renderNumbers();
-  renderQuestion();
+socket.on("scoreUpdate", () => {
   loadScore();
 });
 
-/* ===== LOAD SCORE ===== */
-async function loadScore(){
-  const res = await fetch("/api/teams", {
-    headers: { Authorization: token }
+/* ===== LOAD CATEGORIES ===== */
+async function loadCategories(){
+  const res = await fetch("/api/categories");
+  const categories = await res.json();
+
+  const container = document.getElementById("categories");
+  container.innerHTML = "";
+
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.innerText = cat;
+    btn.onclick = () => loadQuestions(cat);
+    container.appendChild(btn);
   });
+}
 
-  const teams = await res.json();
-  const team = teams.find(t => t.name === teamName);
+let currentQuestions = [];
+let currentIndex = 0;
+let answeredStatus = {};
 
-  if(team){
-    document.getElementById("teamScore").innerText = team.score;
+/* ===== LOAD QUESTIONS ===== */
+async function loadQuestions(category){
+
+  try {
+
+    const res = await fetch(`/api/questions/${category}`);
+    const data = await res.json();
+
+    if (!Array.isArray(data)) {
+      document.getElementById("questionsContainer").innerHTML =
+        `<p>${data.message || "Error loading questions"}</p>`;
+      return;
+    }
+
+    currentQuestions = data;
+    currentIndex = 0;
+    answeredStatus = {};
+
+    renderNumbers();
+    renderQuestion();
+
+  } catch (err) {
+    document.getElementById("questionsContainer").innerHTML =
+      `<p>Server error</p>`;
   }
 }
 
@@ -141,81 +185,6 @@ function renderNumbers(){
 
 }
 
-/* ===== LOAD CATEGORIES ===== */
-async function loadCategories(){
-  const res = await fetch("/api/categories", {
-    headers: { Authorization: token }
-  });
-
-  const categories = await res.json();
-
-  const container = document.getElementById("categories");
-  container.innerHTML = "";
-
-  categories.forEach(cat => {
-    const btn = document.createElement("button");
-    btn.innerText = cat;
-    btn.onclick = () => loadQuestions(cat);
-    container.appendChild(btn);
-  });
-}
-
-let currentQuestions = [];
-let currentIndex = 0;
-let answeredStatus = {};
-
-/* ===== LOAD QUESTIONS ===== */
-async function loadQuestions(category){
-
-  try {
-
-    const res = await fetch(`/api/questions/${category}`, {
-      headers: { Authorization: token }
-    });
-
-    const data = await res.json();
-    console.log("QUESTIONS:", data); // 🔥 debugging
-
-    if (!Array.isArray(data)) {
-      document.getElementById("questionsContainer").innerHTML =
-        `<p>${data.message || "Error loading questions"}</p>`;
-      return;
-    }
-
-    if (data.length === 0) {
-      document.getElementById("questionsContainer").innerHTML =
-        `<p>No questions found</p>`;
-      return;
-    }
-
-    // ===== GET TEAM ANSWERS =====
-    const teamRes = await fetch(`/api/team/${teamName}`, {
-      headers: { Authorization: token }
-    });
-
-    const teamData = await teamRes.json();
-
-    answeredStatus = {};
-
-    teamData.answers.forEach(a => {
-      answeredStatus[a.questionId] = a.correct;
-      answeredStatus[a.questionId + "_selected"] = a.answer;
-    });
-
-    // ===== SET DATA =====
-    currentQuestions = data;
-    currentIndex = 0;
-
-    renderNumbers();
-    renderQuestion();
-
-  } catch (err) {
-    console.error(err);
-    document.getElementById("questionsContainer").innerHTML =
-      `<p>Server error</p>`;
-  }
-}
-
 /* ===== RENDER QUESTION ===== */
 function renderQuestion(){
 
@@ -228,7 +197,6 @@ function renderQuestion(){
   }
 
   const q = currentQuestions[currentIndex];
-  const answered = answeredStatus[q._id];
 
   const card = document.createElement("div");
   card.className = "question-card";
@@ -239,13 +207,11 @@ function renderQuestion(){
 
     let disabled = answeredStatus[q._id] !== undefined ? "disabled" : "";
 
-    let selected = answeredStatus[q._id + "_selected"] === opt;
-
     let style = "";
 
     if (answeredStatus[q._id] !== undefined) {
-      if (selected && answeredStatus[q._id]) style = "background: green;";
-      else if (selected && !answeredStatus[q._id]) style = "background: red;";
+      if (answeredStatus[q._id]) style = "background: green;";
+      else style = "background: red;";
     }
 
     optionsHTML += `
@@ -309,14 +275,7 @@ async function submitAnswer(questionId, answer, btn){
 
   const data = await res.json();
 
-  socket.emit("answerUpdate", {
-    questionId,
-    answer,
-    correct: data.correct
-  });
-
   answeredStatus[questionId] = data.correct;
-  answeredStatus[questionId + "_selected"] = answer;
 
   renderNumbers();
 
@@ -349,7 +308,6 @@ async function sendHelp(){
       Authorization: token
     },
     body: JSON.stringify({
-      teamName,
       message
     })
   });
@@ -363,6 +321,5 @@ loadScore();
 loadCategories();
 
 </script>
-
 </body>
 </html>
