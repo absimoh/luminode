@@ -221,6 +221,7 @@ function renderQuestion(){
   }
 
   const q = currentQuestions[currentIndex];
+  const already = answeredStatus[q._id];
 
   const card = document.createElement("div");
   card.className = "question-card";
@@ -228,8 +229,7 @@ function renderQuestion(){
   let optionsHTML = "";
 
   q.options.forEach(opt => {
-
-    let disabled = answeredStatus[q._id] !== undefined ? "disabled" : "";
+    let disabled = already !== undefined ? "disabled" : "";
 
     let style = "";
 
@@ -285,31 +285,37 @@ function prevQuestion(){
 /* ===== SUBMIT ANSWER ===== */
 async function submitAnswer(questionId, answer, btn){
 
-  const res = await fetch("/api/submit",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization: token
-    },
-    body: JSON.stringify({
-      questionId,
-      answer
-    })
-  });
+  try {
 
-  const data = await res.json();
+    const res = await fetch("/api/submit",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        Authorization: token
+      },
+      body: JSON.stringify({
+        questionId,
+        answer
+      })
+    });
 
-  answeredStatus[questionId] = data.correct;
+    const data = await res.json();
 
-  renderNumbers();
+    answeredStatus[questionId] = data.correct;
 
-  btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
+    btn.parentElement.querySelectorAll("button").forEach(b => b.disabled = true);
 
-  if(data.correct){
-    btn.style.background = "green";
+    if(data.correct){
+      btn.style.background = "green";
+    }else{
+      btn.style.background = "red";
+    }
+
     await loadScore();
-  }else{
-    btn.style.background = "red";
+    renderNumbers();
+
+  } catch {
+    alert("Server error");
   }
 }
 
