@@ -83,19 +83,18 @@ socket.emit("joinUser", { token });
 let userScore = 0;
 
 async function loadScore(){
-  const res = await fetch("/api/leaderboard");
-  const users = await res.json();
 
-  const myToken = JSON.parse(atob(token.split('.')[1]));
-  const myId = myToken.userId;
+  const res = await fetch("/api/me", {
+    headers: {
+      Authorization: token
+    }
+  });
 
-  const me = users.find(u => u._id === myId);
+  const user = await res.json();
 
-  if(me){
-    userScore = me.score;
-    document.getElementById("teamScore").innerText = userScore;
-    document.getElementById("teamNameDisplay").innerText = "User";
-  }
+  document.getElementById("teamScore").innerText = user.score || 0;
+  document.getElementById("teamNameDisplay").innerText = user.username || "User";
+
 }
 
 /* ===== SOCKET ===== */
