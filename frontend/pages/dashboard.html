@@ -105,6 +105,11 @@ async function loadScore(){
     }
 
     const user = await res.json();
+    answeredStatus = {};
+
+    user.answers.forEach(a => {
+      answeredStatus[a.questionId] = a.correct;
+    });
 
     document.getElementById("teamScore").innerText = user.score || 0;
     document.getElementById("teamNameDisplay").innerText = user.username || "User";
