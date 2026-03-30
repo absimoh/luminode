@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Team Dashboard</title>
+<title>User Dashboard</title>
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -16,6 +16,7 @@
   <div class="nav-links">
     <a href="/dashboard">Home</a>
     <a href="/leaderboard">Leaderboard</a>
+    <a href="#" onclick="logout()">Logout</a>
   </div>
 </div>
 
@@ -23,7 +24,7 @@
 
   <div class="team-info">
     <div class="team-name">
-      🛰 Team: <span id="teamNameDisplay"></span>
+      👤 User: <span id="teamNameDisplay"></span>
     </div>
     <div class="team-score">
       ⭐ Score: <span id="teamScore">0</span>
@@ -37,6 +38,7 @@
   <div id="categories" class="category-grid"></div>
   <div id="questionNumbers" class="question-numbers-top"></div>
   <div id="questionsContainer"></div>
+
 </div>
 
 <div class="footer">
@@ -79,21 +81,37 @@ const socket = io();
 // 🔐 join user
 socket.emit("joinUser", { token });
 
-/* ===== USER INFO ===== */
-let userScore = 0;
+/* ===== LOGOUT ===== */
+function logout(){
+  localStorage.removeItem("token");
+  window.location.href = "/";
+}
 
+/* ===== USER INFO ===== */
 async function loadScore(){
 
-  const res = await fetch("/api/me", {
-    headers: {
-      Authorization: token
+  try{
+
+    const res = await fetch("/api/me", {
+      headers: {
+        Authorization: token
+      }
+    });
+
+    if(!res.ok){
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+      return;
     }
-  });
 
-  const user = await res.json();
+    const user = await res.json();
 
-  document.getElementById("teamScore").innerText = user.score || 0;
-  document.getElementById("teamNameDisplay").innerText = user.username || "User";
+    document.getElementById("teamScore").innerText = user.score || 0;
+    document.getElementById("teamNameDisplay").innerText = user.username || "User";
+
+  } catch {
+    window.location.href = "/login";
+  }
 
 }
 
@@ -130,6 +148,13 @@ async function loadQuestions(category){
     const res = await fetch(`/api/questions/${category}`);
     const data = await res.json();
 
+    // 🔥 لو المسابقة مقفلة
+    if(data.message === "Challenges closed"){
+      document.getElementById("questionsContainer").innerHTML =
+        "<h2>🚫 Competition is currently closed</h2>";
+      return;
+    }
+
     if (!Array.isArray(data)) {
       document.getElementById("questionsContainer").innerHTML =
         `<p>${data.message || "Error loading questions"}</p>`;
@@ -143,7 +168,7 @@ async function loadQuestions(category){
     renderNumbers();
     renderQuestion();
 
-  } catch (err) {
+  } catch {
     document.getElementById("questionsContainer").innerHTML =
       `<p>Server error</p>`;
   }
@@ -257,7 +282,7 @@ function prevQuestion(){
   }
 }
 
-/* ===== SUBMIT ANSWER 🔐 ===== */
+/* ===== SUBMIT ANSWER ===== */
 async function submitAnswer(questionId, answer, btn){
 
   const res = await fetch("/api/submit",{
