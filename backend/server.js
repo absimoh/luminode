@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const path = require("path");
 const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const http = require("http");
 const { Server } = require("socket.io");
@@ -34,7 +35,7 @@ function auth(req, res, next) {
   if (!token) return res.status(401).json({ message: "No token" });
 
   try {
-    const decoded = jwt.verify(token, "secretkey");
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch {
@@ -68,7 +69,7 @@ app.post("/api/admin/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (username === "Absi" && password === "Absi1234") {
-    const token = jwt.sign({ role: "admin" }, "secretkey", { expiresIn: "3h" });
+    const token = jwt.sign({ role: "admin" }, JWT_SECRET, { expiresIn: "3h" });
     return res.json({ token });
   }
 
@@ -88,7 +89,7 @@ app.post("/api/team/login", async (req, res) => {
 
     const token = jwt.sign(
       { teamName: team.name },
-      "secretkey",
+      JWT_SECRET,
       { expiresIn: "2h" }
     );
 
@@ -338,7 +339,7 @@ io.on("connection", (socket) => {
 
   socket.on("joinTeam", (data) => {
     try {
-      const decoded = jwt.verify(data.token, "secretkey");
+      const decoded = jwt.verify(data.token, JWT_SECRET);
 
       socket.join(decoded.teamName);
 
