@@ -14,12 +14,15 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container" id="mainContainer">
 
-  <h1>Select Your Team</h1>
-  <p class="subtitle">Choose your team to enter the competition</p>
+  <h1>Welcome to Luminode</h1>
+  <p class="subtitle">Start your journey</p>
 
-  <div id="teamsGrid" class="teams-grid"></div>
+  <button class="primary-btn" onclick="showTeams()">Enter Teams</button>
+  <br><br>
+
+  <button class="danger-btn" onclick="goToCreate()">Create Team</button>
 
 </div>
 
@@ -43,6 +46,20 @@
 <script>
 
 let selectedTeam = null;
+
+/* ===== عرض التيمات فقط عند الطلب ===== */
+async function showTeams() {
+
+  const container = document.getElementById("mainContainer");
+
+  container.innerHTML = `
+    <h1>Select Your Team</h1>
+    <p class="subtitle">Choose your team to enter the competition</p>
+    <div id="teamsGrid" class="teams-grid"></div>
+  `;
+
+  loadTeams();
+}
 
 /* ===== LOAD TEAMS ===== */
 async function loadTeams() {
@@ -75,7 +92,6 @@ function closeModal() {
 /* ===== LOGIN 🔐 ===== */
 async function login() {
 
-  // 🔥 أول شيء نقرأ القيم
   const memberName = document.getElementById("memberName").value;
   const password = document.getElementById("teamPassword").value;
 
@@ -103,10 +119,10 @@ async function login() {
       return;
     }
 
-    // 💾 حفظ البيانات بعد ما تأكدنا
+    // 💾 حفظ البيانات
     localStorage.setItem("token", loginData.token);
     localStorage.setItem("teamName", selectedTeam);
-    localStorage.setItem("memberName", memberName); // 🔥 هنا الصحيح
+    localStorage.setItem("memberName", memberName);
 
     // 👤 إضافة العضو
     await fetch("/api/team/join", {
@@ -127,13 +143,17 @@ async function login() {
     alert("Server error");
   }
 }
-const savedName = localStorage.getItem("memberName");
 
+/* ===== حفظ الاسم ===== */
+const savedName = localStorage.getItem("memberName");
 if(savedName){
   document.getElementById("memberName").value = savedName;
 }
-/* ===== INIT ===== */
-loadTeams();
+
+/* ===== Create Team ===== */
+function goToCreate(){
+  window.location.href = "/create-team"; // عدلها لو المسار مختلف
+}
 
 </script>
 
