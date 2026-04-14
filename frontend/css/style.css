@@ -424,3 +424,34 @@ body {
   }
 
 }
+/* ===== HOME BUTTONS ===== */
+.home-buttons{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:20px;
+}
+
+.main-btn{
+  padding:15px 40px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.main-btn.blue{
+  background: linear-gradient(45deg,#3b82f6,#6366f1);
+  color:white;
+}
+
+.main-btn.red{
+  background: linear-gradient(45deg,#ef4444,#f87171);
+  color:white;
+}
+
+.main-btn:hover{
+  transform:scale(1.07);
+}

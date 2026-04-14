@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Luminode Competition</title>
-<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -25,7 +25,7 @@
       🚀 Enter Team
     </button>
 
-    <button class="main-btn red" onclick="goToCreate()">
+    <button class="main-btn red" onclick="openCreateModal()">
       ➕ Create Team
     </button>
 
@@ -36,140 +36,82 @@
 </div>
 
 <div class="footer">
-  © 2026 Abbas Al-Mokhtafi. All Rights Reserved.
+  © 2026 Abbas Al-Mokhtafi
 </div>
 
-<!-- ===== LOGIN MODAL ===== -->
-<div id="loginModal" class="modal">
+<!-- ===== CREATE TEAM MODAL ===== -->
+<div id="createModal" class="modal">
   <div class="modal-content">
-    <h2 id="selectedTeamTitle"></h2>
+    <h2>Create Team</h2>
 
-    <input type="text" id="memberName" placeholder="Your Name">
-    <input type="password" id="teamPassword" placeholder="Team Password">
+    <input id="newTeamName" placeholder="Team Name">
+    <input id="newTeamPassword" placeholder="Password">
 
-    <button class="primary-btn" onclick="login()">Enter</button>
-    <button class="danger-btn" onclick="closeModal()">Cancel</button>
+    <button class="primary-btn" onclick="createTeam()">Create</button>
+    <button class="danger-btn" onclick="closeCreateModal()">Cancel</button>
   </div>
 </div>
 
 <script>
 
-let selectedTeam = null;
-
-/* ===== SHOW TEAMS ===== */
-async function showTeams() {
+async function showTeams(){
 
   const section = document.getElementById("teamsSection");
 
+  const res = await fetch("/api/teams");
+  const teams = await res.json();
+
+  if(teams.length === 0){
+    section.innerHTML = "<p>No teams available</p>";
+    return;
+  }
+
   section.innerHTML = `
-    <h2 style="margin-bottom:15px;">Select Your Team</h2>
+    <h2>Select Your Team</h2>
     <div id="teamsGrid" class="teams-grid"></div>
   `;
 
-  try {
+  const grid = document.getElementById("teamsGrid");
 
-    const res = await fetch("/api/teams");
-    const teams = await res.json();
-
-    const grid = document.getElementById("teamsGrid");
-    grid.innerHTML = "";
-
-    if(teams.length === 0){
-      grid.innerHTML = "<p>No teams available</p>";
-      return;
-    }
-
-    teams.forEach(team => {
-      const card = document.createElement("div");
-      card.className = "team-card";
-      card.innerHTML = `<h3>${team.name}</h3>`;
-      card.onclick = () => openModal(team.name);
-      grid.appendChild(card);
-    });
-
-  } catch(err){
-    console.log(err);
-    alert("Error loading teams");
-  }
+  teams.forEach(team=>{
+    const card = document.createElement("div");
+    card.className = "team-card";
+    card.innerText = team.name;
+    grid.appendChild(card);
+  });
 }
 
-/* ===== MODAL ===== */
-function openModal(teamName) {
-  selectedTeam = teamName;
-  document.getElementById("selectedTeamTitle").innerText = teamName;
-  document.getElementById("loginModal").style.display = "flex";
+/* ===== CREATE TEAM ===== */
+function openCreateModal(){
+  document.getElementById("createModal").style.display = "flex";
 }
 
-function closeModal() {
-  document.getElementById("loginModal").style.display = "none";
+function closeCreateModal(){
+  document.getElementById("createModal").style.display = "none";
 }
 
-/* ===== LOGIN ===== */
-async function login() {
+async function createTeam(){
 
-  const memberName = document.getElementById("memberName").value.trim();
-  const password = document.getElementById("teamPassword").value.trim();
+  const name = document.getElementById("newTeamName").value;
+  const password = document.getElementById("newTeamPassword").value;
 
-  if(!memberName || !password){
-    return alert("Please enter your name and password");
+  if(!name || !password){
+    return alert("Enter all fields");
   }
 
-  try {
+  const res = await fetch("/api/team/create",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ name, password })
+  });
 
-    const res = await fetch("/api/team/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name: selectedTeam,
-        password
-      })
-    });
+  const data = await res.json();
 
-    const data = await res.json();
+  alert(data.message);
 
-    if (!data.token) {
-      return alert(data.message || "Login failed");
-    }
-
-    // حفظ البيانات
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("teamName", selectedTeam);
-    localStorage.setItem("memberName", memberName);
-
-    // تسجيل العضو
-    await fetch("/api/team/join", {
-      method: "POST",
-      headers: {
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify({
-        name: selectedTeam,
-        memberName
-      })
-    });
-
-    window.location.href = "/dashboard.html";
-
-  } catch(err){
-    console.log(err);
-    alert("Server error");
-  }
+  closeCreateModal();
+  showTeams();
 }
-
-/* ===== CREATE ===== */
-function goToCreate(){
-  window.location.href = "/admin.html";
-}
-
-/* ===== AUTO FILL NAME ===== */
-window.onload = () => {
-  const savedName = localStorage.getItem("memberName");
-  if(savedName){
-    document.getElementById("memberName").value = savedName;
-  }
-};
 
 </script>
 
