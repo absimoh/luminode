@@ -14,15 +14,24 @@
   </div>
 </div>
 
-<div class="container" id="mainContainer">
+<div class="container">
 
   <h1>Welcome to Luminode</h1>
   <p class="subtitle">Start your journey</p>
 
-  <button class="primary-btn" onclick="showTeams()">Enter Teams</button>
-  <br><br>
+  <div class="home-buttons">
 
-  <button class="danger-btn" onclick="goToCreate()">Create Team</button>
+    <button class="main-btn blue" onclick="showTeams()">
+      🚀 Enter Team
+    </button>
+
+    <button class="main-btn red" onclick="goToCreate()">
+      ➕ Create Team
+    </button>
+
+  </div>
+
+  <div id="teamsSection" style="margin-top:30px;"></div>
 
 </div>
 
@@ -47,22 +56,16 @@
 
 let selectedTeam = null;
 
-/* ===== عرض التيمات فقط عند الطلب ===== */
+/* ===== SHOW TEAMS ===== */
 async function showTeams() {
 
-  const container = document.getElementById("mainContainer");
+  const section = document.getElementById("teamsSection");
 
-  container.innerHTML = `
-    <h1>Select Your Team</h1>
-    <p class="subtitle">Choose your team to enter the competition</p>
+  section.innerHTML = `
+    <h2 style="margin-bottom:15px;">Select Your Team</h2>
     <div id="teamsGrid" class="teams-grid"></div>
   `;
 
-  loadTeams();
-}
-
-/* ===== LOAD TEAMS ===== */
-async function loadTeams() {
   const res = await fetch("/api/teams");
   const teams = await res.json();
 
@@ -89,7 +92,7 @@ function closeModal() {
   document.getElementById("loginModal").style.display = "none";
 }
 
-/* ===== LOGIN 🔐 ===== */
+/* ===== LOGIN ===== */
 async function login() {
 
   const memberName = document.getElementById("memberName").value;
@@ -99,60 +102,51 @@ async function login() {
     return alert("Enter all fields");
   }
 
-  try {
+  const res = await fetch("/api/team/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: selectedTeam,
+      password
+    })
+  });
 
-    const loginRes = await fetch("/api/team/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name: selectedTeam,
-        password
-      })
-    });
+  const data = await res.json();
 
-    const loginData = await loginRes.json();
-
-    if (!loginData.token) {
-      alert(loginData.message || "Login failed");
-      return;
-    }
-
-    // 💾 حفظ البيانات
-    localStorage.setItem("token", loginData.token);
-    localStorage.setItem("teamName", selectedTeam);
-    localStorage.setItem("memberName", memberName);
-
-    // 👤 إضافة العضو
-    await fetch("/api/team/join", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: selectedTeam,
-        password,
-        memberName
-      })
-    });
-
-    // 🚀 الانتقال
-    window.location.href = "/dashboard";
-
-  } catch (err) {
-    console.error(err);
-    alert("Server error");
+  if (!data.token) {
+    return alert(data.message || "Login failed");
   }
+
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("teamName", selectedTeam);
+  localStorage.setItem("memberName", memberName);
+
+  await fetch("/api/team/join", {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+      name: selectedTeam,
+      password,
+      memberName
+    })
+  });
+
+  window.location.href = "/dashboard";
 }
 
-/* ===== حفظ الاسم ===== */
+/* ===== CREATE ===== */
+function goToCreate(){
+  window.location.href = "/admin";
+}
+
+/* ===== SAVE NAME ===== */
 const savedName = localStorage.getItem("memberName");
 if(savedName){
   document.getElementById("memberName").value = savedName;
-}
-
-/* ===== Create Team ===== */
-function goToCreate(){
-  window.location.href = "/create-team"; // عدلها لو المسار مختلف
 }
 
 </script>

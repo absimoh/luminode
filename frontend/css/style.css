@@ -439,3 +439,8 @@ button:active {
   cursor: pointer;
   margin-top: 8px;
 }
+
+.option-btn[disabled]{
+  opacity:0.7;
+  cursor:not-allowed;
+}
