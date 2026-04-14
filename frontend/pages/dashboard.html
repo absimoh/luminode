@@ -59,14 +59,13 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 
-const token = localStorage.getItem("token");
 const teamName = localStorage.getItem("teamName");
 
-if (!token || !teamName) {
-  window.location.href = "/pages/index.html";
+if(!teamName){
+  window.location.href="/";
 }
 
-const socket = io({
+c onst socket = io({
   transports: ["websocket"]
 });
 
