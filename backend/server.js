@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const http = require("http");
+const path = require("path");
 const { Server } = require("socket.io");
 
 const Team = require("./models/Team");
@@ -9,6 +10,7 @@ const Question = require("./models/Question");
 
 const app = express();
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
     origin: "*"
@@ -18,7 +20,9 @@ const io = new Server(server, {
 /* ===== MIDDLEWARE ===== */
 app.use(cors());
 app.use(express.json());
-app.use(express.static("frontend"));
+
+/* 🔥 يخدم ملفات الفرونت */
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 /* ===== MONGODB ===== */
 mongoose.connect(process.env.MONGO_URI)
@@ -86,7 +90,7 @@ app.post("/api/submit", async (req, res) => {
       team.score += question.points;
     }
 
-    // 🔥 حفظ الإجابة
+    // حفظ الإجابة
     team.answers.push({
       questionId,
       correct,
@@ -95,14 +99,14 @@ app.post("/api/submit", async (req, res) => {
 
     await team.save();
 
-    // 🔥 realtime للفريق
+    /* 🔥 تحديث مباشر لكل الفريق */
     io.to(teamName).emit("questionAnswered", {
       questionId,
       correct,
       answer
     });
 
-    // 🔥 تحديث السكور
+    /* 🔥 تحديث السكور */
     io.emit("scoreUpdate");
 
     res.json({ correct });
@@ -114,12 +118,12 @@ app.post("/api/submit", async (req, res) => {
 
 });
 
-/* ===== TEST ROUTE ===== */
+/* ===== 🔥 الصفحة الرئيسية ===== */
 app.get("/", (req, res) => {
-  res.send("Luminode server is running 🚀");
+  res.sendFile(path.join(__dirname, "../frontend/pages/index.html"));
 });
 
-/* ===== PORT FIX (مهم جدًا) ===== */
+/* ===== PORT ===== */
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
