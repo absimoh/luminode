@@ -99,7 +99,7 @@ app.post("/api/submit", async (req,res)=>{
     }
 
     // منع التكرار
-    const already = team.answers.find(a => a.questionId === questionId);
+    const already = team.answers.find(a => a.questionId.toString() === questionId);
 
     if(already){
       return res.json({

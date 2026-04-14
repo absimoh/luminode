@@ -5,7 +5,8 @@ const teamSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true
   },
 
   password: {
@@ -20,19 +21,29 @@ const teamSchema = new mongoose.Schema({
 
   members: [
     {
-      name: String
+      name: {
+        type: String,
+        trim: true
+      }
     }
   ],
 
-  // 🔥 هنا أهم شي
+  // 🔥 الإجابات
   answers: [
     {
-      questionId: String,
+      questionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question"
+      },
       correct: Boolean,
-      answer: String
+      answer: String,
+      answeredAt: {
+        type: Date,
+        default: Date.now
+      }
     }
   ]
 
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("Team", teamSchema);
