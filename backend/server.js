@@ -122,6 +122,11 @@ app.post("/api/team/join", async (req, res) => {
     return res.json({ message: "Team not found" });
   }
 
+  // 🔥 الحد الأقصى 4
+  if (team.members.length >= 4) {
+    return res.json({ message: "Team is full ❌" });
+  }
+
   // منع التكرار
   const exists = team.members.find(m => m.name === memberName);
 
@@ -207,6 +212,15 @@ app.post("/api/ticket", async (req,res)=>{
   io.emit("newTicket");
 
   res.json({ success:true });
+
+});
+
+/* ===== LEADERBOARD ===== */
+app.get("/api/leaderboard", async (req, res) => {
+
+  const teams = await Team.find().sort({ score: -1 });
+
+  res.json(teams);
 
 });
 

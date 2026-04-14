@@ -142,6 +142,15 @@ async function login(){
   window.location.href = "/dashboard";
 }
 
+await fetch("/api/team/join", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name: selectedTeam,
+    memberName
+  })
+});
+
 /* ===== CREATE TEAM ===== */
 function openCreateModal(){
   document.getElementById("createModal").style.display = "flex";
