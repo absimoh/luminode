@@ -24,9 +24,21 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 /* ================= DATABASE ================= */
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log("DB Error:", err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log("MongoDB Connected");
+
+  server.listen(PORT, () => {
+    console.log("Server running on port " + PORT);
+  });
+
+})
+.catch(err => {
+  console.error("MongoDB Error:", err);
+});
 
 /* ================= AUTH ================= */
 function auth(req, res, next) {
@@ -330,9 +342,6 @@ const PORT = process.env.PORT || 10000;
 const server = http.createServer(app);
 const io = new Server(server);
 
-server.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
 
 /* ================= SOCKET ================= */
 io.on("connection", (socket) => {
