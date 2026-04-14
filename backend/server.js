@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const http = require("http");
+const path = require("path");
 const { Server } = require("socket.io");
 
 const Team = require("./models/Team");
@@ -17,7 +18,10 @@ const io = new Server(server, {
 /* ===== MIDDLEWARE ===== */
 app.use(cors());
 app.use(express.json());
-app.use(express.static("frontend"));
+
+// 🔥 FIX IMPORTANT
+app.use(express.static(path.join(__dirname, "../frontend")));
+app.use("/pages", express.static(path.join(__dirname, "../frontend/pages")));
 
 /* ===== MONGO ===== */
 mongoose.connect(process.env.MONGO_URI)
@@ -67,22 +71,24 @@ app.get("/api/questions/:category", async (req,res)=>{
   res.json(q);
 });
 
-/* ===== PAGE ROUTES ===== */
+/* ===== PAGE ROUTES (FIXED) ===== */
 
+// الصفحة الرئيسية
 app.get("/", (req,res)=>{
-  res.sendFile(__dirname + "/../frontend/pages/index.html");
+  res.sendFile(path.join(__dirname, "../frontend/pages/index.html"));
 });
 
+// باقي الصفحات
 app.get("/admin", (req,res)=>{
-  res.sendFile(__dirname + "/../frontend/pages/admin.html");
+  res.sendFile(path.join(__dirname, "../frontend/pages/admin.html"));
 });
 
 app.get("/dashboard", (req,res)=>{
-  res.sendFile(__dirname + "/../frontend/pages/dashboard.html");
+  res.sendFile(path.join(__dirname, "../frontend/pages/dashboard.html"));
 });
 
 app.get("/leaderboard", (req,res)=>{
-  res.sendFile(__dirname + "/../frontend/pages/leaderboard.html");
+  res.sendFile(path.join(__dirname, "../frontend/pages/leaderboard.html"));
 });
 
 /* ===== START ===== */
