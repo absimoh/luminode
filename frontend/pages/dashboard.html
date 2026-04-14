@@ -66,7 +66,9 @@ if (!token || !teamName) {
   window.location.href = "/pages/index.html";
 }
 
-const socket = io();
+const socket = io({
+  transports: ["websocket"]
+});
 
 // 🔥 انضمام للفريق
 socket.emit("joinTeam", { teamName });
@@ -81,6 +83,9 @@ socket.on("questionAnswered", (data) => {
 
   renderNumbers();
   renderQuestion();
+  loadScore();
+});
+socket.on("scoreUpdate", () => {
   loadScore();
 });
 
@@ -110,17 +115,17 @@ function renderNumbers(){
     const btn = document.createElement("button");
     btn.innerText = i + 1;
 
-    if(i === currentIndex){
-      btn.style.background = "#f59e0b";
-    }
+      if(i === currentIndex){
+        btn.classList.add("active");
+      }
 
-    if(answeredStatus[q._id] === true){
-      btn.style.background = "#22c55e";
-    }
+      if(answeredStatus[q._id] === true){
+        btn.classList.add("correct");
+      }
 
-    if(answeredStatus[q._id] === false){
-      btn.style.background = "#ef4444";
-    }
+      if(answeredStatus[q._id] === false){
+        btn.classList.add("wrong");
+}
 
     btn.onclick = ()=>{
       currentIndex = i;
@@ -180,8 +185,8 @@ async function loadQuestions(category){
     answeredStatus = {};
 
     teamData.answers.forEach(a => {
-      answeredStatus[a.questionId] = a.correct;
-      answeredStatus[a.questionId + "_selected"] = a.answer;
+      answeredStatus[a.questionId.toString()] = a.correct;
+      answeredStatus[a.questionId.toString() + "_selected"] = a.answer;
     });
 
     currentQuestions = data;
