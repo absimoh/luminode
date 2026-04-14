@@ -14,8 +14,8 @@
   </div>
 
   <div class="nav-links">
-    <a href="/dashboard">Home</a>
-    <a href="/leaderboard">Leaderboard</a>
+    <a href="/dashboard.html">Home</a>
+    <a href="/leaderboard.html">Leaderboard</a>
   </div>
 </div>
 
@@ -37,6 +37,7 @@
   <div id="categories" class="category-grid"></div>
   <div id="questionNumbers" class="question-numbers-top"></div>
   <div id="questionsContainer"></div>
+
 </div>
 
 <div class="footer">
@@ -48,20 +49,10 @@
   <div class="modal-content">
     <h2>🚨 Request Help</h2>
 
-    <textarea 
-      id="helpMessage"
-      class="input-box"
-      placeholder="Describe your issue..."
-    ></textarea>
+    <textarea id="helpMessage" class="input-box" placeholder="Describe your issue..."></textarea>
 
-    <button class="primary-btn" onclick="sendHelp()">
-      Send Request
-    </button>
-
-    <button class="danger-btn" onclick="closeHelpModal()">
-      Cancel
-    </button>
-
+    <button class="primary-btn" onclick="sendHelp()">Send Request</button>
+    <button class="danger-btn" onclick="closeHelpModal()">Cancel</button>
   </div>
 </div>
 
@@ -72,18 +63,19 @@ const token = localStorage.getItem("token");
 const teamName = localStorage.getItem("teamName");
 
 if (!token || !teamName) {
-  window.location.href = "/";
+  window.location.href = "/pages/index.html";
 }
 
 const socket = io();
 
-// 🔐 join باستخدام التوكن
-socket.emit("joinTeam", { token });
+// 🔥 انضمام للفريق
+socket.emit("joinTeam", { teamName });
 
 document.getElementById("teamNameDisplay").innerText = teamName;
 
 /* ===== SOCKET ===== */
 socket.on("questionAnswered", (data) => {
+
   answeredStatus[data.questionId] = data.correct;
   answeredStatus[data.questionId + "_selected"] = data.answer;
 
@@ -94,15 +86,16 @@ socket.on("questionAnswered", (data) => {
 
 /* ===== LOAD SCORE ===== */
 async function loadScore(){
-  const res = await fetch("/api/teams", {
-    headers: { Authorization: token }
-  });
+  try {
+    const res = await fetch("/api/teams");
+    const teams = await res.json();
+    const team = teams.find(t => t.name === teamName);
 
-  const teams = await res.json();
-  const team = teams.find(t => t.name === teamName);
-
-  if(team){
-    document.getElementById("teamScore").innerText = team.score;
+    if(team){
+      document.getElementById("teamScore").innerText = team.score;
+    }
+  } catch(err){
+    console.log(err);
   }
 }
 
@@ -143,21 +136,23 @@ function renderNumbers(){
 
 /* ===== LOAD CATEGORIES ===== */
 async function loadCategories(){
-  const res = await fetch("/api/categories", {
-    headers: { Authorization: token }
-  });
+  try {
+    const res = await fetch("/api/categories");
+    const categories = await res.json();
 
-  const categories = await res.json();
+    const container = document.getElementById("categories");
+    container.innerHTML = "";
 
-  const container = document.getElementById("categories");
-  container.innerHTML = "";
+    categories.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.innerText = cat;
+      btn.onclick = () => loadQuestions(cat);
+      container.appendChild(btn);
+    });
 
-  categories.forEach(cat => {
-    const btn = document.createElement("button");
-    btn.innerText = cat;
-    btn.onclick = () => loadQuestions(cat);
-    container.appendChild(btn);
-  });
+  } catch(err){
+    console.log(err);
+  }
 }
 
 let currentQuestions = [];
@@ -169,30 +164,17 @@ async function loadQuestions(category){
 
   try {
 
-    const res = await fetch(`/api/questions/${category}`, {
-      headers: { Authorization: token }
-    });
-
+    const res = await fetch(`/api/questions/${category}`);
     const data = await res.json();
-    console.log("QUESTIONS:", data); // 🔥 debugging
 
-    if (!Array.isArray(data)) {
-      document.getElementById("questionsContainer").innerHTML =
-        `<p>${data.message || "Error loading questions"}</p>`;
-      return;
-    }
-
-    if (data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
       document.getElementById("questionsContainer").innerHTML =
         `<p>No questions found</p>`;
       return;
     }
 
-    // ===== GET TEAM ANSWERS =====
-    const teamRes = await fetch(`/api/team/${teamName}`, {
-      headers: { Authorization: token }
-    });
-
+    // جلب إجابات الفريق
+    const teamRes = await fetch(`/api/team/${teamName}`);
     const teamData = await teamRes.json();
 
     answeredStatus = {};
@@ -202,7 +184,6 @@ async function loadQuestions(category){
       answeredStatus[a.questionId + "_selected"] = a.answer;
     });
 
-    // ===== SET DATA =====
     currentQuestions = data;
     currentIndex = 0;
 
@@ -210,9 +191,7 @@ async function loadQuestions(category){
     renderQuestion();
 
   } catch (err) {
-    console.error(err);
-    document.getElementById("questionsContainer").innerHTML =
-      `<p>Server error</p>`;
+    console.log(err);
   }
 }
 
@@ -223,12 +202,11 @@ function renderQuestion(){
   container.innerHTML = "";
 
   if(currentQuestions.length === 0){
-    container.innerHTML = "<p>No questions available</p>";
+    container.innerHTML = "<p>No questions</p>";
     return;
   }
 
   const q = currentQuestions[currentIndex];
-  const answered = answeredStatus[q._id];
 
   const card = document.createElement("div");
   card.className = "question-card";
@@ -243,9 +221,12 @@ function renderQuestion(){
 
     let style = "";
 
-    if (answeredStatus[q._id] !== undefined) {
-      if (selected && answeredStatus[q._id]) style = "background: green;";
-      else if (selected && !answeredStatus[q._id]) style = "background: red;";
+    if (selected && answeredStatus[q._id] === true) {
+      style = "background: green;";
+    }
+
+    if (selected && answeredStatus[q._id] === false) {
+      style = "background: red;";
     }
 
     optionsHTML += `
@@ -292,28 +273,22 @@ function prevQuestion(){
   }
 }
 
-/* ===== SUBMIT ANSWER 🔐 ===== */
+/* ===== SUBMIT ANSWER ===== */
 async function submitAnswer(questionId, answer, btn){
 
   const res = await fetch("/api/submit",{
     method:"POST",
     headers:{
-      "Content-Type":"application/json",
-      Authorization: token
+      "Content-Type":"application/json"
     },
     body: JSON.stringify({
+      teamName,
       questionId,
       answer
     })
   });
 
   const data = await res.json();
-
-  socket.emit("answerUpdate", {
-    questionId,
-    answer,
-    correct: data.correct
-  });
 
   answeredStatus[questionId] = data.correct;
   answeredStatus[questionId + "_selected"] = answer;
@@ -344,10 +319,7 @@ async function sendHelp(){
 
   await fetch("/api/ticket",{
     method:"POST",
-    headers:{
-      "Content-Type":"application/json",
-      Authorization: token
-    },
+    headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
       teamName,
       message

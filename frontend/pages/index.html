@@ -66,19 +66,31 @@ async function showTeams() {
     <div id="teamsGrid" class="teams-grid"></div>
   `;
 
-  const res = await fetch("/api/teams");
-  const teams = await res.json();
+  try {
 
-  const grid = document.getElementById("teamsGrid");
-  grid.innerHTML = "";
+    const res = await fetch("/api/teams");
+    const teams = await res.json();
 
-  teams.forEach(team => {
-    const card = document.createElement("div");
-    card.className = "team-card";
-    card.innerHTML = `<h3>${team.name}</h3>`;
-    card.onclick = () => openModal(team.name);
-    grid.appendChild(card);
-  });
+    const grid = document.getElementById("teamsGrid");
+    grid.innerHTML = "";
+
+    if(teams.length === 0){
+      grid.innerHTML = "<p>No teams available</p>";
+      return;
+    }
+
+    teams.forEach(team => {
+      const card = document.createElement("div");
+      card.className = "team-card";
+      card.innerHTML = `<h3>${team.name}</h3>`;
+      card.onclick = () => openModal(team.name);
+      grid.appendChild(card);
+    });
+
+  } catch(err){
+    console.log(err);
+    alert("Error loading teams");
+  }
 }
 
 /* ===== MODAL ===== */
@@ -95,59 +107,69 @@ function closeModal() {
 /* ===== LOGIN ===== */
 async function login() {
 
-  const memberName = document.getElementById("memberName").value;
-  const password = document.getElementById("teamPassword").value;
+  const memberName = document.getElementById("memberName").value.trim();
+  const password = document.getElementById("teamPassword").value.trim();
 
   if(!memberName || !password){
-    return alert("Enter all fields");
+    return alert("Please enter your name and password");
   }
 
-  const res = await fetch("/api/team/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: selectedTeam,
-      password
-    })
-  });
+  try {
 
-  const data = await res.json();
+    const res = await fetch("/api/team/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: selectedTeam,
+        password
+      })
+    });
 
-  if (!data.token) {
-    return alert(data.message || "Login failed");
+    const data = await res.json();
+
+    if (!data.token) {
+      return alert(data.message || "Login failed");
+    }
+
+    // حفظ البيانات
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("teamName", selectedTeam);
+    localStorage.setItem("memberName", memberName);
+
+    // تسجيل العضو
+    await fetch("/api/team/join", {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        name: selectedTeam,
+        memberName
+      })
+    });
+
+    window.location.href = "/dashboard.html";
+
+  } catch(err){
+    console.log(err);
+    alert("Server error");
   }
-
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("teamName", selectedTeam);
-  localStorage.setItem("memberName", memberName);
-
-  await fetch("/api/team/join", {
-    method: "POST",
-    headers: {
-      "Content-Type":"application/json"
-    },
-    body: JSON.stringify({
-      name: selectedTeam,
-      password,
-      memberName
-    })
-  });
-
-  window.location.href = "/dashboard";
 }
 
 /* ===== CREATE ===== */
 function goToCreate(){
-  window.location.href = "/admin";
+  window.location.href = "/admin.html";
 }
 
-/* ===== SAVE NAME ===== */
-const savedName = localStorage.getItem("memberName");
-if(savedName){
-  document.getElementById("memberName").value = savedName;
-}
+/* ===== AUTO FILL NAME ===== */
+window.onload = () => {
+  const savedName = localStorage.getItem("memberName");
+  if(savedName){
+    document.getElementById("memberName").value = savedName;
+  }
+};
 
 </script>
 

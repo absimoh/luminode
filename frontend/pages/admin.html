@@ -7,6 +7,15 @@
 </head>
 <body>
 
+<!-- 🔐 حماية الصفحة -->
+<script>
+const token = localStorage.getItem("adminToken");
+
+if(!token){
+  window.location.href = "/pages/index.html";
+}
+</script>
+
 <div class="navbar">
   <div class="nav-left">
     <img src="/assets/images/logo.png">
@@ -14,8 +23,8 @@
   </div>
 
   <div class="nav-links">
-    <a href="/dashboard">Dashboard</a>
-    <a href="/leaderboard">Leaderboard</a>
+    <a href="/pages/dashboard.html">Dashboard</a>
+    <a href="/pages/leaderboard.html">Leaderboard</a>
   </div>
 </div>
 
@@ -62,13 +71,6 @@
 
 <script>
 
-/* ===== PROTECTION ===== */
-const token = localStorage.getItem("adminToken");
-
-if(!token){
-  window.location.href = "/admin-login";
-}
-
 const socket = io();
 
 /* ===== ONLINE USERS ===== */
@@ -79,8 +81,13 @@ socket.on("onlineCount", (count) => {
 /* ===== CREATE TEAM ===== */
 async function createTeam(){
 
-  const name = document.getElementById("teamName").value;
-  const password = document.getElementById("teamPassword").value;
+  const name = document.getElementById("teamName").value.trim();
+  const password = document.getElementById("teamPassword").value.trim();
+
+  if(!name || !password){
+    alert("Enter team name and password");
+    return;
+  }
 
   const res = await fetch("/api/admin/create-team",{
     method:"POST",
