@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 
 const Team = require("./models/Team");
 const Question = require("./models/Question");
+const Ticket = require("./models/Ticket");
 
 const app = express();
 const server = http.createServer(app);
@@ -25,7 +26,7 @@ app.use("/pages", express.static(path.join(__dirname, "../frontend/pages")));
 /* ===== MONGO ===== */
 mongoose.connect(process.env.MONGO_URI)
 .then(()=> console.log("✅ MongoDB Connected"))
-.catch(err=> console.log(err));
+.catch(err=> console.log("❌ Mongo Error:", err));
 
 /* ===== SOCKET ===== */
 io.on("connection",(socket)=>{
@@ -57,7 +58,8 @@ app.post("/api/team/create", async (req,res)=>{
     name,
     password,
     score:0,
-    answers:[]
+    answers:[],
+    members:[]
   });
 
   await team.save();
@@ -76,6 +78,12 @@ app.get("/api/teams", async (req,res)=>{
 app.get("/api/team/:name", async (req,res)=>{
   const team = await Team.findOne({ name: req.params.name });
   res.json(team);
+});
+
+// 🟢 GET CATEGORIES 🔥 (مهم جدًا)
+app.get("/api/categories", async (req, res) => {
+  const categories = await Question.distinct("category");
+  res.json(categories);
 });
 
 // 🟢 QUESTIONS
@@ -103,7 +111,30 @@ app.post("/api/team/login", async (req, res) => {
 
 });
 
-/* ===== 🔥 SUBMIT ANSWER (الأهم) ===== */
+/* ===== JOIN TEAM (إضافة عضو) ===== */
+app.post("/api/team/join", async (req, res) => {
+
+  const { name, memberName } = req.body;
+
+  const team = await Team.findOne({ name });
+
+  if (!team) {
+    return res.json({ message: "Team not found" });
+  }
+
+  // منع التكرار
+  const exists = team.members.find(m => m.name === memberName);
+
+  if (!exists) {
+    team.members.push({ name: memberName });
+    await team.save();
+  }
+
+  res.json({ success: true });
+
+});
+
+/* ===== 🔥 SUBMIT ANSWER ===== */
 app.post("/api/submit", async (req,res)=>{
 
   try{
@@ -118,7 +149,9 @@ app.post("/api/submit", async (req,res)=>{
     }
 
     // منع التكرار
-    const already = team.answers.find(a => a.questionId.toString() === questionId);
+    const already = team.answers.find(
+      a => a.questionId.toString() === questionId
+    );
 
     if(already){
       return res.json({
@@ -140,13 +173,14 @@ app.post("/api/submit", async (req,res)=>{
 
     await team.save();
 
-    /* 🔥 realtime */
+    /* 🔥 realtime للفريق */
     io.to(teamName).emit("questionAnswered",{
       questionId,
       correct,
       answer
     });
 
+    /* 🔥 تحديث السكور */
     io.emit("scoreUpdate");
 
     res.json({ correct });
@@ -155,6 +189,24 @@ app.post("/api/submit", async (req,res)=>{
     console.log(err);
     res.status(500).json({ message:"Server Error" });
   }
+
+});
+
+/* ===== HELP TICKET ===== */
+app.post("/api/ticket", async (req,res)=>{
+
+  const { teamName, message } = req.body;
+
+  const ticket = new Ticket({
+    teamName,
+    message
+  });
+
+  await ticket.save();
+
+  io.emit("newTicket");
+
+  res.json({ success:true });
 
 });
 
