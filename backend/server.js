@@ -68,6 +68,10 @@ app.post("/api/team/create", async (req,res)=>{
 
 });
 
+app.get("/leaderboard.html", (req,res)=>{
+  res.sendFile(path.join(__dirname, "../frontend/pages/leaderboard.html"));
+});
+
 // 🟢 GET TEAMS
 app.get("/api/teams", async (req,res)=>{
   const teams = await Team.find();
