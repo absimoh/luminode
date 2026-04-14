@@ -2,7 +2,7 @@ require("dotenv").config();
 let onlineUsers = new Set();
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const path = require("path");
 const jwt = require("jsonwebtoken");
@@ -158,22 +158,26 @@ app.post("/api/team/join", async (req, res) => {
 
 /* ================= CREATE TEAM ================= */
 app.post("/api/admin/create-team", async (req, res) => {
-
   try {
-
     const { name, password } = req.body;
 
-    if(!name || !password){
+    if (!name || !password) {
       return res.json({ message: "Missing data" });
     }
 
     const existing = await Team.findOne({ name });
 
-    if(existing){
+    if (existing) {
       return res.json({ message: "Team already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(password, 10);
+    } catch (err) {
+      console.error("Bcrypt error:", err);
+      return res.status(500).json({ message: "Hash error" });
+    }
 
     const team = new Team({
       name,
@@ -188,10 +192,9 @@ app.post("/api/admin/create-team", async (req, res) => {
     res.json({ message: "Team created" });
 
   } catch (err) {
-    console.error(err);
+    console.error("Create Team Error:", err);
     res.status(500).json({ message: "Server error" });
   }
-
 });
 
 /* ================= GET TEAM DATA 🔥 FIX ================= */
