@@ -9,16 +9,21 @@ const Question = require("./models/Question");
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+});
 
+/* ===== MIDDLEWARE ===== */
 app.use(cors());
 app.use(express.json());
 app.use(express.static("frontend"));
 
-/* ===== MongoDB ===== */
+/* ===== MONGODB ===== */
 mongoose.connect(process.env.MONGO_URI)
-.then(()=>console.log("MongoDB Connected"))
-.catch(err=>console.log(err));
+.then(() => console.log("✅ MongoDB Connected"))
+.catch(err => console.log("❌ Mongo Error:", err));
 
 /* ===== SOCKET ===== */
 io.on("connection", (socket) => {
@@ -29,20 +34,22 @@ io.on("connection", (socket) => {
 
 });
 
-/* ===== GET TEAMS ===== */
-app.get("/api/teams", async (req,res)=>{
+/* ===== ROUTES ===== */
+
+// كل الفرق
+app.get("/api/teams", async (req, res) => {
   const teams = await Team.find();
   res.json(teams);
 });
 
-/* ===== GET TEAM ===== */
-app.get("/api/team/:name", async (req,res)=>{
+// فريق واحد
+app.get("/api/team/:name", async (req, res) => {
   const team = await Team.findOne({ name: req.params.name });
   res.json(team);
 });
 
-/* ===== GET QUESTIONS ===== */
-app.get("/api/questions/:category", async (req,res)=>{
+// أسئلة حسب التصنيف
+app.get("/api/questions/:category", async (req, res) => {
   const questions = await Question.find({ category: req.params.category });
   res.json(questions);
 });
@@ -50,56 +57,71 @@ app.get("/api/questions/:category", async (req,res)=>{
 /* ===== SUBMIT ANSWER ===== */
 app.post("/api/submit", async (req, res) => {
 
-  const { teamName, questionId, answer } = req.body;
+  try {
 
-  const team = await Team.findOne({ name: teamName });
-  const question = await Question.findById(questionId);
+    const { teamName, questionId, answer } = req.body;
 
-  if (!team || !question) {
-    return res.status(400).json({ message: "Error" });
-  }
+    const team = await Team.findOne({ name: teamName });
+    const question = await Question.findById(questionId);
 
-  // منع التكرار
-  const alreadyAnswered = team.answers.find(
-    a => a.questionId === questionId
-  );
+    if (!team || !question) {
+      return res.status(400).json({ message: "Error" });
+    }
 
-  if (alreadyAnswered) {
-    return res.json({
-      message: "Already answered",
-      correct: alreadyAnswered.correct
+    // منع التكرار
+    const alreadyAnswered = team.answers.find(
+      a => a.questionId === questionId
+    );
+
+    if (alreadyAnswered) {
+      return res.json({
+        message: "Already answered",
+        correct: alreadyAnswered.correct
+      });
+    }
+
+    const correct = question.correctAnswer === answer;
+
+    if (correct) {
+      team.score += question.points;
+    }
+
+    // 🔥 حفظ الإجابة
+    team.answers.push({
+      questionId,
+      correct,
+      answer
     });
+
+    await team.save();
+
+    // 🔥 realtime للفريق
+    io.to(teamName).emit("questionAnswered", {
+      questionId,
+      correct,
+      answer
+    });
+
+    // 🔥 تحديث السكور
+    io.emit("scoreUpdate");
+
+    res.json({ correct });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
   }
-
-  const correct = question.correctAnswer === answer;
-
-  if (correct) {
-    team.score += question.points;
-  }
-
-  // 🔥 حفظ الإجابة
-  team.answers.push({
-    questionId,
-    correct,
-    answer
-  });
-
-  await team.save();
-
-  // 🔥 realtime
-  io.to(teamName).emit("questionAnswered", {
-    questionId,
-    correct,
-    answer
-  });
-
-  io.emit("scoreUpdate");
-
-  res.json({ correct });
 
 });
 
-/* ===== START ===== */
-server.listen(3000, ()=>{
-  console.log("Server running on port 3000");
+/* ===== TEST ROUTE ===== */
+app.get("/", (req, res) => {
+  res.send("Luminode server is running 🚀");
+});
+
+/* ===== PORT FIX (مهم جدًا) ===== */
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+  console.log("🔥 Server running on port " + PORT);
 });
