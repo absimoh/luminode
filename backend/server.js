@@ -84,6 +84,25 @@ app.get("/api/questions/:category", async (req,res)=>{
   res.json(q);
 });
 
+/* ===== LOGIN TEAM ===== */
+app.post("/api/team/login", async (req, res) => {
+
+  const { name, password } = req.body;
+
+  const team = await Team.findOne({ name });
+
+  if (!team) {
+    return res.json({ message: "Team not found" });
+  }
+
+  if (team.password !== password) {
+    return res.json({ message: "Wrong password" });
+  }
+
+  res.json({ success: true });
+
+});
+
 /* ===== 🔥 SUBMIT ANSWER (الأهم) ===== */
 app.post("/api/submit", async (req,res)=>{
 

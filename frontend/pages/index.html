@@ -39,6 +39,19 @@
   © 2026 Abbas Al-Mokhtafi
 </div>
 
+<!-- ===== LOGIN MODAL ===== -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <h2 id="teamTitle"></h2>
+
+    <input id="memberName" placeholder="Your Name">
+    <input id="teamPassword" type="password" placeholder="Team Password">
+
+    <button class="primary-btn" onclick="login()">Enter</button>
+    <button class="danger-btn" onclick="closeLoginModal()">Cancel</button>
+  </div>
+</div>
+
 <!-- ===== CREATE TEAM MODAL ===== -->
 <div id="createModal" class="modal">
   <div class="modal-content">
@@ -54,6 +67,9 @@
 
 <script>
 
+let selectedTeam = null;
+
+/* ===== SHOW TEAMS ===== */
 async function showTeams(){
 
   const section = document.getElementById("teamsSection");
@@ -77,8 +93,53 @@ async function showTeams(){
     const card = document.createElement("div");
     card.className = "team-card";
     card.innerText = team.name;
+
+    // 🔥 أهم سطر
+    card.onclick = () => openLoginModal(team.name);
+
     grid.appendChild(card);
   });
+}
+
+/* ===== LOGIN ===== */
+function openLoginModal(teamName){
+  selectedTeam = teamName;
+  document.getElementById("teamTitle").innerText = teamName;
+  document.getElementById("loginModal").style.display = "flex";
+}
+
+function closeLoginModal(){
+  document.getElementById("loginModal").style.display = "none";
+}
+
+async function login(){
+
+  const memberName = document.getElementById("memberName").value;
+  const password = document.getElementById("teamPassword").value;
+
+  if(!memberName || !password){
+    return alert("Enter all fields");
+  }
+
+  const res = await fetch("/api/team/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      name: selectedTeam,
+      password
+    })
+  });
+
+  const data = await res.json();
+
+  if(!data.success){
+    return alert(data.message || "Login failed");
+  }
+
+  localStorage.setItem("teamName", selectedTeam);
+  localStorage.setItem("memberName", memberName);
+
+  window.location.href = "/dashboard";
 }
 
 /* ===== CREATE TEAM ===== */
