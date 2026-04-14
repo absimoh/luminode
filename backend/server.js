@@ -19,7 +19,6 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-// 🔥 FIX IMPORTANT
 app.use(express.static(path.join(__dirname, "../frontend")));
 app.use("/pages", express.static(path.join(__dirname, "../frontend/pages")));
 
@@ -30,7 +29,15 @@ mongoose.connect(process.env.MONGO_URI)
 
 /* ===== SOCKET ===== */
 io.on("connection",(socket)=>{
+
   console.log("user connected");
+
+  // 🔥 دخول الفريق
+  socket.on("joinTeam", ({ teamName }) => {
+    socket.join(teamName);
+    console.log("joined team:", teamName);
+  });
+
 });
 
 /* ===== ROUTES ===== */
@@ -65,20 +72,79 @@ app.get("/api/teams", async (req,res)=>{
   res.json(teams);
 });
 
+// 🟢 GET TEAM
+app.get("/api/team/:name", async (req,res)=>{
+  const team = await Team.findOne({ name: req.params.name });
+  res.json(team);
+});
+
 // 🟢 QUESTIONS
 app.get("/api/questions/:category", async (req,res)=>{
   const q = await Question.find({ category: req.params.category });
   res.json(q);
 });
 
-/* ===== PAGE ROUTES (FIXED) ===== */
+/* ===== 🔥 SUBMIT ANSWER (الأهم) ===== */
+app.post("/api/submit", async (req,res)=>{
 
-// الصفحة الرئيسية
+  try{
+
+    const { teamName, questionId, answer } = req.body;
+
+    const team = await Team.findOne({ name: teamName });
+    const question = await Question.findById(questionId);
+
+    if(!team || !question){
+      return res.status(400).json({ message:"Error" });
+    }
+
+    // منع التكرار
+    const already = team.answers.find(a => a.questionId === questionId);
+
+    if(already){
+      return res.json({
+        correct: already.correct
+      });
+    }
+
+    const correct = question.correctAnswer === answer;
+
+    if(correct){
+      team.score += question.points;
+    }
+
+    team.answers.push({
+      questionId,
+      correct,
+      answer
+    });
+
+    await team.save();
+
+    /* 🔥 realtime */
+    io.to(teamName).emit("questionAnswered",{
+      questionId,
+      correct,
+      answer
+    });
+
+    io.emit("scoreUpdate");
+
+    res.json({ correct });
+
+  }catch(err){
+    console.log(err);
+    res.status(500).json({ message:"Server Error" });
+  }
+
+});
+
+/* ===== PAGES ===== */
+
 app.get("/", (req,res)=>{
   res.sendFile(path.join(__dirname, "../frontend/pages/index.html"));
 });
 
-// باقي الصفحات
 app.get("/admin", (req,res)=>{
   res.sendFile(path.join(__dirname, "../frontend/pages/admin.html"));
 });
