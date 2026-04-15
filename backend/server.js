@@ -132,7 +132,8 @@ app.post("/api/team/join", async (req,res)=>{
 
 // teams
 app.get("/api/teams", async (req,res)=>{
-  res.json(await Team.find());
+  const teams = await Team.find().select("name score");
+  res.json(teams);
 });
 
 // team
