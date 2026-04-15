@@ -37,13 +37,31 @@
 
 const socket = io();
 
+let controlState = {};
+
+/* ===== LOAD CONTROL ===== */
+async function loadControl(){
+  const res = await fetch("/api/control");
+  controlState = await res.json();
+}
+
 /* ===== LOAD LEADERBOARD ===== */
 async function loadLeaderboard(){
 
+  await loadControl(); // 🔥 مهم
+
+  const container = document.getElementById("leaderboardContainer");
+
+  // ❌ إذا مقفول
+  if(!controlState.leaderboardOpen){
+    container.innerHTML = "<p>🚫 Leaderboard is closed</p>";
+    return;
+  }
+
+  // ✅ إذا مفتوح
   const res = await fetch("/api/leaderboard");
   const teams = await res.json();
 
-  const container = document.getElementById("leaderboardContainer");
   container.innerHTML = "";
 
   teams.forEach((team, index) => {
@@ -61,8 +79,16 @@ async function loadLeaderboard(){
   });
 }
 
-/* ===== REALTIME UPDATE 🔥 */
+/* ===== REALTIME ===== */
+
+// 🔥 تحديث السكور
 socket.on("scoreUpdate", () => {
+  loadLeaderboard();
+});
+
+// 🔥 فتح/إغلاق مباشر
+socket.on("controlUpdate", (data)=>{
+  controlState = data;
   loadLeaderboard();
 });
 
