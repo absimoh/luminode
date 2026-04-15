@@ -142,11 +142,11 @@ app.get("/", (req,res)=>{
   res.sendFile(path.join(__dirname,"../frontend/pages/index.html"));
 });
 
-app.get("/dashboard.html",(req,res)=>{
+app.get("/dashboard",(req,res)=>{
   res.sendFile(path.join(__dirname,"../frontend/pages/dashboard.html"));
 });
 
-app.get("/leaderboard.html",(req,res)=>{
+app.get("/leaderboard",(req,res)=>{
   res.sendFile(path.join(__dirname,"../frontend/pages/leaderboard.html"));
 });
 
