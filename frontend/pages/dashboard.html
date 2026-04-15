@@ -74,7 +74,14 @@ socket.emit("joinTeam", { teamName });
 
 document.getElementById("teamNameDisplay").innerText = teamName;
 
+let controlState = {};
+let currentQuestions = [];
+let currentIndex = 0;
+let answeredStatus = {};
+
 /* ===== SOCKET ===== */
+
+// realtime إجابة
 socket.on("questionAnswered", (data) => {
 
   answeredStatus[data.questionId] = data.correct;
@@ -84,23 +91,91 @@ socket.on("questionAnswered", (data) => {
   renderQuestion();
   loadScore();
 });
+
+// realtime سكورات
 socket.on("scoreUpdate", () => {
   loadScore();
 });
 
+// realtime فتح/إغلاق
+socket.on("controlUpdate", (data)=>{
+  controlState = data;
+  loadCategories();
+});
+
+/* ===== LOAD CONTROL ===== */
+async function loadControl(){
+  const res = await fetch("/api/control");
+  controlState = await res.json();
+}
+
 /* ===== LOAD SCORE ===== */
 async function loadScore(){
-  try {
-    const res = await fetch("/api/teams");
-    const teams = await res.json();
-    const team = teams.find(t => t.name === teamName);
+  const res = await fetch("/api/teams");
+  const teams = await res.json();
 
-    if(team){
-      document.getElementById("teamScore").innerText = team.score;
-    }
-  } catch(err){
-    console.log(err);
+  const team = teams.find(t => t.name === teamName);
+
+  if(team){
+    document.getElementById("teamScore").innerText = team.score;
   }
+}
+
+/* ===== LOAD CATEGORIES ===== */
+async function loadCategories(){
+
+  await loadControl();
+
+  const container = document.getElementById("categories");
+
+  if(!controlState.challengesOpen){
+    container.innerHTML = "<p>🚫 Challenges are closed</p>";
+    document.getElementById("questionsContainer").innerHTML = "";
+    document.getElementById("questionNumbers").innerHTML = "";
+    return;
+  }
+
+  const res = await fetch("/api/categories");
+  const categories = await res.json();
+
+  container.innerHTML = "";
+
+  categories.forEach(cat => {
+    const btn = document.createElement("button");
+    btn.innerText = cat;
+    btn.onclick = () => loadQuestions(cat);
+    container.appendChild(btn);
+  });
+
+}
+
+/* ===== LOAD QUESTIONS ===== */
+async function loadQuestions(category){
+
+  const res = await fetch(`/api/questions/${category}`);
+  const data = await res.json();
+
+  if (!Array.isArray(data) || data.length === 0) {
+    document.getElementById("questionsContainer").innerHTML =
+      `<p>No questions found</p>`;
+    return;
+  }
+
+  const teamRes = await fetch(`/api/team/${teamName}`);
+  const teamData = await teamRes.json();
+
+  answeredStatus = {};
+
+  teamData.answers.forEach(a => {
+    answeredStatus[a.questionId.toString()] = a.correct;
+    answeredStatus[a.questionId.toString() + "_selected"] = a.answer;
+  });
+
+  currentQuestions = data;
+  currentIndex = 0;
+
+  renderNumbers();
+  renderQuestion();
 }
 
 /* ===== RENDER NUMBERS ===== */
@@ -114,17 +189,17 @@ function renderNumbers(){
     const btn = document.createElement("button");
     btn.innerText = i + 1;
 
-      if(i === currentIndex){
-        btn.classList.add("active");
-      }
+    if(i === currentIndex){
+      btn.classList.add("active");
+    }
 
-      if(answeredStatus[q._id] === true){
-        btn.classList.add("correct");
-      }
+    if(answeredStatus[q._id] === true){
+      btn.classList.add("correct");
+    }
 
-      if(answeredStatus[q._id] === false){
-        btn.classList.add("wrong");
-}
+    if(answeredStatus[q._id] === false){
+      btn.classList.add("wrong");
+    }
 
     btn.onclick = ()=>{
       currentIndex = i;
@@ -136,67 +211,6 @@ function renderNumbers(){
 
   });
 
-}
-
-/* ===== LOAD CATEGORIES ===== */
-async function loadCategories(){
-  try {
-    const res = await fetch("/api/categories");
-    const categories = await res.json();
-
-    const container = document.getElementById("categories");
-    container.innerHTML = "";
-
-    categories.forEach(cat => {
-      const btn = document.createElement("button");
-      btn.innerText = cat;
-      btn.onclick = () => loadQuestions(cat);
-      container.appendChild(btn);
-    });
-
-  } catch(err){
-    console.log(err);
-  }
-}
-
-let currentQuestions = [];
-let currentIndex = 0;
-let answeredStatus = {};
-
-/* ===== LOAD QUESTIONS ===== */
-async function loadQuestions(category){
-
-  try {
-
-    const res = await fetch(`/api/questions/${category}`);
-    const data = await res.json();
-
-    if (!Array.isArray(data) || data.length === 0) {
-      document.getElementById("questionsContainer").innerHTML =
-        `<p>No questions found</p>`;
-      return;
-    }
-
-    // جلب إجابات الفريق
-    const teamRes = await fetch(`/api/team/${teamName}`);
-    const teamData = await teamRes.json();
-
-    answeredStatus = {};
-
-    teamData.answers.forEach(a => {
-      answeredStatus[a.questionId.toString()] = a.correct;
-      answeredStatus[a.questionId.toString() + "_selected"] = a.answer;
-    });
-
-    currentQuestions = data;
-    currentIndex = 0;
-
-    renderNumbers();
-    renderQuestion();
-
-  } catch (err) {
-    console.log(err);
-  }
 }
 
 /* ===== RENDER QUESTION ===== */
@@ -280,6 +294,10 @@ function prevQuestion(){
 /* ===== SUBMIT ANSWER ===== */
 async function submitAnswer(questionId, answer, btn){
 
+  if(!controlState.challengesOpen){
+    return alert("🚫 Challenges are closed");
+  }
+
   const res = await fetch("/api/submit",{
     method:"POST",
     headers:{
@@ -309,7 +327,7 @@ async function submitAnswer(questionId, answer, btn){
   }
 }
 
-/* ===== HELP SYSTEM ===== */
+/* ===== HELP ===== */
 function openHelpModal(){
   document.getElementById("helpModal").style.display = "flex";
 }
