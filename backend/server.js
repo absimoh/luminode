@@ -163,3 +163,15 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, ()=>{
   console.log("🔥 Running on "+PORT);
 });
+
+// 🔐 ADMIN LOGIN
+app.post("/api/admin/login", (req,res)=>{
+
+  const { username, password } = req.body;
+
+  if(username === "admin" && password === "1234"){
+    return res.json({ token: "admin-token" });
+  }
+
+  res.json({ message:"Invalid credentials" });
+});
