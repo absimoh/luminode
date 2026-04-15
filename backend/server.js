@@ -150,6 +150,14 @@ app.get("/leaderboard",(req,res)=>{
   res.sendFile(path.join(__dirname,"../frontend/pages/leaderboard.html"));
 });
 
+app.get("/admin", (req,res)=>{
+  res.sendFile(path.join(__dirname,"../frontend/pages/admin.html"));
+});
+
+app.get("/admin-login", (req,res)=>{
+  res.sendFile(path.join(__dirname,"../frontend/pages/admin-login.html"));
+});
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, ()=>{
